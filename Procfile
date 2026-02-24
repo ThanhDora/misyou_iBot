@@ -1,2 +1,1 @@
-web: python3 bot.py 
-worker: python3 bot.py
+web: rm -f *.session* && python3 bot.py
