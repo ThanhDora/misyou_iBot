@@ -1,4 +1,4 @@
-FROM python:3.9-slim-bookworm
+FROM python:3.10-slim-bookworm
 
 RUN apt-get update -qq && apt-get -y install --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/*
 
