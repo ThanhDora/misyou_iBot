@@ -10,3 +10,4 @@ BotLog.txt
 Renames
 Metadata
 *.log
+*.session*
