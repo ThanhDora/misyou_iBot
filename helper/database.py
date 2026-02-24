@@ -1,33 +1,6 @@
-# (c) @RknDeveloperr
-# Rkn Developer 
-# Don't Remove Credit 😔
-# Telegram Channel @RknDeveloper & @Rkn_Botz
-# Developer @RknDeveloperr
-# Special Thanks To (https://github.com/JayMahakal98)
-# Update Channel @Digital_Botz & @DigitalBotz_Support
-
+# ThanhDora | Doratem | https://github.com/ThanhDora | @DoraTeamMods
 """
 Apache License 2.0
-Copyright (c) 2022 @Digital_Botz
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Telegram Link : https://t.me/Digital_Botz 
-Repo Link : https://github.com/DigitalBotz/Digital-Rename-Bot
-License Link : https://github.com/DigitalBotz/Digital-Rename-Bot/blob/main/LICENSE
 """
 
 # database imports
@@ -35,7 +8,7 @@ import motor.motor_asyncio, datetime, pytz
 
 # bots imports
 from config import Config
-from helper.utils import send_log
+from helper.utils import send_log, send_pending_approval_notification
 
 class Database:
     def __init__(self, uri, database_name):
@@ -57,7 +30,7 @@ class Database:
             uploadlimit=Config.FREE_UPLOAD_LIMIT,
             daily=0,
             metadata_mode=False,
-            metadata_code="--change-title @Rkn_Botz\n--change-video-title @Rkn_Botz\n--change-audio-title @Rkn_Botz\n--change-subtitle-title @Rkn_Botz\n--change-author @Rkn_Botz",
+            metadata_code="--change-title @DoraTeamMods\n--change-video-title @DoraTeamMods\n--change-audio-title @DoraTeamMods\n--change-subtitle-title @DoraTeamMods\n--change-author @DoraTeamMods",
             expiry_time=None,
             has_free_trial=False,
             ban_status=dict(
@@ -65,19 +38,36 @@ class Database:
                 ban_duration=0,
                 banned_on=datetime.date.max.isoformat(),
                 ban_reason=''
-            )
+            ),
+            approved=False
         )
 
     async def add_user(self, b, m):
         u = m.from_user
         if not await self.is_user_exist(u.id):
             user = self.new_user(u.id)
-            await self.col.insert_one(user)            
+            await self.col.insert_one(user)
             await send_log(b, u)
+            if getattr(Config, "APPROVAL_REQUIRED", False):
+                await send_pending_approval_notification(b, u)
 
     async def is_user_exist(self, id):
         user = await self.col.find_one({'_id': int(id)})
         return bool(user)
+
+    async def is_approved(self, user_id):
+        if not getattr(Config, "APPROVAL_REQUIRED", False):
+            return True
+        user = await self.col.find_one({'_id': int(user_id)})
+        if not user:
+            return False
+        return user.get("approved", True)
+
+    async def set_approved(self, user_id, approved):
+        await self.col.update_one({'_id': int(user_id)}, {'$set': {'approved': bool(approved)}})
+
+    async def get_pending_users(self):
+        return self.col.find({"approved": False})
 
     async def total_users_count(self):
         count = await self.col.count_documents({})
@@ -88,7 +78,9 @@ class Database:
         return all_users
 
     async def delete_user(self, user_id):
-        await self.col.delete_many({'_id': int(user_id)})
+        uid = int(user_id)
+        await self.col.delete_many({'_id': uid})
+        await self.premium.delete_many({'id': uid})
     
     async def set_thumbnail(self, id, file_id):
         await self.col.update_one({'_id': int(id)}, {'$set': {'file_id': file_id}})
@@ -193,7 +185,9 @@ class Database:
                     'uploadlimit': limit
                 }}
             )
-    
+
+    addpremium = add_premium
+
     async def remove_premium(self, user_id, limit=Config.FREE_UPLOAD_LIMIT, type="Free"):
         await self.premium.update_one(
             {"id": user_id}, 
@@ -207,7 +201,7 @@ class Database:
             await self.col.update_one(
                 {'_id': user_id}, 
                 {'$set': {
-                    'usertype': user_type,
+                    'usertype': type,
                     'uploadlimit': limit
                 }}
             )
@@ -276,7 +270,11 @@ class Database:
             ban_duration=ban_duration,
             banned_on=datetime.date.today().isoformat(),
             ban_reason=ban_reason)
-        await self.col.update_one({'_id': int(user_id)}, {'$set': {'ban_status': ban_status}})
+        await self.col.update_one(
+            {'_id': int(user_id)},
+            {'$set': {'ban_status': ban_status}},
+            upsert=True
+        )
 
     async def get_ban_status(self, id):
         default = dict(
@@ -285,6 +283,8 @@ class Database:
             banned_on=datetime.date.max.isoformat(),
             ban_reason='')
         user = await self.col.find_one({'_id': int(id)})
+        if not user:
+            return default
         return user.get('ban_status', default)
 
     async def get_all_banned_users(self):
@@ -295,6 +295,4 @@ digital_botz = Database(Config.DB_URL, Config.DB_NAME)
 
 # Rkn Developer 
 # Don't Remove Credit 😔
-# Telegram Channel @RknDeveloper & @Rkn_Botz
-# Developer @RknDeveloperr
-# Update Channel @Digital_Botz & @DigitalBotz_Support
+# ThanhDora | Doratem | @DoraTeamMods

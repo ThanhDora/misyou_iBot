@@ -1,40 +1,18 @@
-#  Telegram MTProto API Client Library for Pyrogram
-#  Copyright (C) 2017-present DigitalBotz <https://github.com/DigitalBotz>
-#  I am a telegram bot, I created it using pyrogram library. https://github.com/pyrogram
+# ThanhDora | Doratem | https://github.com/ThanhDora | @DoraTeamMods
 """
 Apache License 2.0
-Copyright (c) 2022 @Digital_Botz
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Telegram Link : https://t.me/Digital_Botz 
-Repo Link : https://github.com/DigitalBotz/Digital-Rename-Bot
-License Link : https://github.com/DigitalBotz/Digital-Rename-Bot/blob/main/LICENSE
 """
 
 __name__ = "Digital-Rename-Bot"
 __version__ = "3.1.0"
 __license__ = " Apache License, Version 2.0"
-__copyright__ = "Copyright (C) 2022-present Digital Botz <https://github.com/DigitalBotz>"
-__programer__ = "<a href=https://github.com/DigitalBotz/Digital-Rename-Bot>Digital Botz</a>"
+__copyright__ = "ThanhDora | <a href=https://github.com/ThanhDora>GitHub</a>"
+__programer__ = "<a href=https://github.com/ThanhDora>ThanhDora</a>"
 __library__ = "<a href=https://github.com/pyrogram>Pyʀᴏɢʀᴀᴍ</a>"
 __language__ = "<a href=https://www.python.org/>Pyᴛʜᴏɴ 3</a>"
 __database__ = "<a href=https://cloud.mongodb.com/>Mᴏɴɢᴏ DB</a>"
-__developer__ = "<a href=https://t.me/Digital_Botz>Digital Botz</a>"
-__maindeveloper__ = "<a href=https://t.me/RknDeveloper>RknDeveloper</a>"
+__developer__ = "<a href=https://t.me/DoraTeamMods>@DoraTeamMods</a>"
+__maindeveloper__ = "<a href=https://github.com/ThanhDora>ThanhDora / Doratem</a>"
 
 # main copyright herders (©️)
 # I have been working on this repo since 2022
@@ -64,11 +42,35 @@ __maindeveloper__ = "<a href=https://t.me/RknDeveloper>RknDeveloper</a>"
 
 from plugins.force_sub import not_subscribed, forces_sub, handle_banned_user_status
 from pyrogram import Client, filters
+from config import Config
+from helper.database import digital_botz
+from helper.utils import send_pending_approval_notification
+
+async def require_approved(_, client, update):
+    if not getattr(Config, "APPROVAL_REQUIRED", False):
+        return True
+    user_id = getattr(update, "from_user", None) and update.from_user.id
+    if not user_id:
+        return False
+    return await digital_botz.is_approved(user_id)
 
 @Client.on_message(filters.private)
 async def _(bot, message):
+    await digital_botz.add_user(bot, message)
+    if Config.APPROVAL_REQUIRED and not await digital_botz.is_approved(message.from_user.id):
+        if message.text and message.text.strip().lower().startswith("/start"):
+            await send_pending_approval_notification(bot, message.from_user)
+        return await message.reply_text(
+            "⏳ **Bạn chưa được duyệt.**\n\nAdmin cần duyệt tài khoản trước khi bạn dùng bot.\nVui lòng đợi hoặc liên hệ admin."
+        )
     await handle_banned_user_status(bot, message)
-    
-@Client.on_message(filters.private & filters.create(not_subscribed))
+
+@Client.on_message(filters.private & filters.sticker & filters.create(require_approved))
+async def sticker_file_id_handler(bot, message):
+    fid = message.sticker.file_id
+    await message.reply_text(f"**LOADING_STICKER**\n\n`{fid}`\n\nMột sticker: copy vào .env\nNhiều sticker: gửi lần lượt từng sticker, copy từng id rồi ghép bằng dấu phẩy trong .env:\n`LOADING_STICKER=id1,id2,id3`")
+
+
+@Client.on_message(filters.private & filters.create(not_subscribed) & filters.create(require_approved))
 async def forces_sub_handler(bot, message):
     await forces_sub(bot, message)

@@ -1,32 +1,6 @@
-# (c) @RknDeveloperr
-# Rkn Developer 
-# Don't Remove Credit 😔
-# Telegram Channel @RknDeveloper & @Rkn_Botz
-# Developer @RknDeveloperr
-# Special Thanks To @ReshamOwner
-# Update Channel @Digital_Botz & @DigitalBotz_Support
+# ThanhDora | Doratem | https://github.com/ThanhDora | @DoraTeamMods
 """
 Apache License 2.0
-Copyright (c) 2022 @Digital_Botz
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Telegram Link : https://t.me/Digital_Botz 
-Repo Link : https://github.com/DigitalBotz/Digital-Rename-Bot
-License Link : https://github.com/DigitalBotz/Digital-Rename-Bot/blob/main/LICENSE
 """
 
 # extra imports
@@ -40,29 +14,26 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ForceRepl
 from helper.database import digital_botz
 from config import Config, rkn
 from helper.utils import humanbytes
-from plugins import __version__ as _bot_version_, __developer__, __database__, __library__, __language__, __programer__
+from plugins import __version__ as _bot_version_, __developer__, __database__, __library__, __language__, __programer__, require_approved
 from plugins.file_rename import upload_doc
 
-upgrade_button = InlineKeyboardMarkup([[        
-        InlineKeyboardButton('buy premium ✓', user_id=int(6705898491)),
-         ],[
-        InlineKeyboardButton("Bᴀᴄᴋ", callback_data = "start")
-]])
+def _upgrade_markup(with_trial=False):
+    rows = [[InlineKeyboardButton('buy premium ✓', url=Config.PREMIUM_LINK)]]
+    if with_trial:
+        rows.append([InlineKeyboardButton("ᴛʀɪᴀʟ - 𝟷𝟸 ʜᴏᴜʀs ✓", callback_data="give_trial")])
+    rows.append([InlineKeyboardButton("Bᴀᴄᴋ", callback_data="start")])
+    return InlineKeyboardMarkup(rows)
 
-upgrade_trial_button = InlineKeyboardMarkup([[        
-        InlineKeyboardButton('buy premium ✓', user_id=int(6705898491)),
-         ],[
-        InlineKeyboardButton("ᴛʀɪᴀʟ - 𝟷𝟸 ʜᴏᴜʀs ✓", callback_data = "give_trial"),
-        InlineKeyboardButton("Bᴀᴄᴋ", callback_data = "start")
-]])
+upgrade_button = _upgrade_markup(False)
+upgrade_trial_button = _upgrade_markup(True)
 
 
         
-@Client.on_message(filters.private & filters.command("start"))
+@Client.on_message(filters.private & filters.command("start") & filters.create(require_approved))
 async def start(client, message):
     start_button = [[        
-        InlineKeyboardButton('Uᴩᴅᴀ𝚃ᴇꜱ', url='https://t.me/Digital_Botz'),
-        InlineKeyboardButton('Sᴜᴩᴩᴏʀ𝚃', url='https://t.me/DigitalBotz_Support')
+        InlineKeyboardButton('Uᴩᴅᴀ𝚃ᴇꜱ', url='https://t.me/DoraTeamMods'),
+        InlineKeyboardButton('Sᴜᴩᴩᴏʀ𝚃', url='https://t.me/DoraTeamMods')
         ],[
         InlineKeyboardButton('Aʙᴏυᴛ', callback_data='about'),
         InlineKeyboardButton('Hᴇʟᴩ', callback_data='help')       
@@ -79,7 +50,7 @@ async def start(client, message):
         await message.reply_text(text=rkn.START_TXT.format(user.mention), reply_markup=InlineKeyboardMarkup(start_button), disable_web_page_preview=True)
 
 
-@Client.on_message(filters.private & filters.command("myplan"))
+@Client.on_message(filters.private & filters.command("myplan") & filters.create(require_approved))
 async def myplan(client, message):
     if not client.premium:
         return # premium mode disabled ✓
@@ -127,7 +98,7 @@ async def myplan(client, message):
             await asyncio.sleep(2)
             await m.delete()
 
-@Client.on_message(filters.private & filters.command("plans"))
+@Client.on_message(filters.private & filters.command("plans") & filters.create(require_approved))
 async def plans(client, message):
     if not client.premium:
         return # premium mode disabled ✓
@@ -145,13 +116,48 @@ async def plans(client, message):
         await message.reply_text(text=upgrade_msg, reply_markup=upgrade_button, disable_web_page_preview=True)
    
   
-@Client.on_callback_query()
+@Client.on_callback_query(filters.create(require_approved))
 async def cb_handler(client, query: CallbackQuery):
-    data = query.data 
+    data = query.data
+    if data.startswith("aprv_") or data.startswith("rej_"):
+        if query.from_user.id not in Config.ADMIN:
+            return await query.answer("Bạn không có quyền.", show_alert=True)
+        if not getattr(Config, "APPROVAL_REQUIRED", False):
+            return await query.answer("Tính năng duyệt chưa bật.", show_alert=True)
+        uid = int(data.split("_", 1)[1])
+        if data.startswith("aprv_"):
+            await digital_botz.set_approved(uid, True)
+            try:
+                await query.message.edit_text(
+                    (query.message.text or "") + "\n\n✅ **Đã duyệt bởi** " + (query.from_user.mention or str(query.from_user.id)),
+                    reply_markup=None
+                )
+            except Exception:
+                pass
+            await query.answer("Đã duyệt user.")
+            try:
+                await client.send_message(uid, "✅ **Bạn đã được admin duyệt.** Bạn có thể dùng bot ngay.")
+            except Exception:
+                pass
+        else:
+            await digital_botz.set_approved(uid, False)
+            try:
+                await query.message.edit_text(
+                    (query.message.text or "") + "\n\n❌ **Đã từ chối bởi** " + (query.from_user.mention or str(query.from_user.id)),
+                    reply_markup=None
+                )
+            except Exception:
+                pass
+            await query.answer("Đã từ chối.")
+            try:
+                await client.send_message(uid, "❌ **Admin đã từ chối yêu cầu.** Bạn không thể sử dụng bot.")
+            except Exception:
+                pass
+        return
     if data == "start":
         start_button = [[        
-        InlineKeyboardButton('Uᴩᴅᴀ𝚃ᴇꜱ', url='https://t.me/Digital_Botz'),
-        InlineKeyboardButton('Sᴜᴩᴩᴏʀ𝚃', url='https://t.me/DigitalBotz_Support')
+        InlineKeyboardButton('Uᴩᴅᴀ𝚃ᴇꜱ', url='https://t.me/DoraTeamMods'),
+        InlineKeyboardButton('Sᴜᴩᴩᴏʀ𝚃', url='https://t.me/DoraTeamMods')
         ],[
         InlineKeyboardButton('Aʙᴏυᴛ', callback_data='about'),
         InlineKeyboardButton('Hᴇʟᴩ', callback_data='help')       
@@ -298,7 +304,7 @@ async def cb_handler(client, query: CallbackQuery):
             reply_markup=InlineKeyboardMarkup([[
                 #⚠️ don't change source code & source link ⚠️ #
            #Whoever is deploying this repo is given a warning ⚠️ not to remove this repo link #first & last warning ⚠️   
-                InlineKeyboardButton("💞 Sᴏᴜʀᴄᴇ Cᴏᴅᴇ 💞", url="https://github.com/DigitalBotz/Digital-Rename-Bot")
+                InlineKeyboardButton("💞 Sᴏᴜʀᴄᴇ Cᴏᴅᴇ 💞", url="https://github.com/ThanhDora")
             ],[
                 InlineKeyboardButton("🔒 Cʟᴏꜱᴇ", callback_data = "close"),
                 InlineKeyboardButton("◀️ Bᴀᴄᴋ", callback_data = "start")
@@ -317,9 +323,4 @@ async def cb_handler(client, query: CallbackQuery):
             await query.message.delete()
             await query.message.continue_propagation()
 
-# (c) @RknDeveloperr
-# Rkn Developer 
-# Don't Remove Credit 😔
-# Telegram Channel @RknDeveloper & @Rkn_Botz
-# Developer @RknDeveloperr
-# Update Channel @Digital_Botz & @DigitalBotz_Support
+# ThanhDora | Doratem | https://github.com/ThanhDora | @DoraTeamMods

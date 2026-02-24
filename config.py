@@ -1,13 +1,9 @@
-# (c) @RknDeveloperr
-# Rkn Developer 
-# Don't Remove Credit 😔
-# Telegram Channel @RknDeveloper & @Rkn_Botz
-# Developer @RknDeveloperr
-# Special Thanks To @ReshamOwner
-# Update Channel @Digital_Botz & @DigitalBotz_Support
+# (c) ThanhDora / Doratem
+# https://github.com/ThanhDora
+# Telegram @DoraTeamMods
 """
 Apache License 2.0
-Copyright (c) 2022 @Digital_Botz
+Copyright (c) 2022 @Digital_Botz | ThanhDora | @DoraTeamMods
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +20,14 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Telegram Link : https://t.me/Digital_Botz 
-Repo Link : https://github.com/DigitalBotz/Digital-Rename-Bot
-License Link : https://github.com/DigitalBotz/Digital-Rename-Bot/blob/main/LICENSE
+Telegram: https://t.me/DoraTeamMods
+Repo: https://github.com/ThanhDora
 """
 
 import re, os, time
+from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).resolve().parent / ".env")
 id_pattern = re.compile(r'^.\d+$') 
 
 class Config(object):
@@ -46,10 +44,32 @@ class Config(object):
     DB_NAME = os.environ.get("DB_NAME","Digital_Rename_Bot")     
     DB_URL = os.environ.get("DB_URL","")
  
-    # other configs
-    RKN_PIC = os.environ.get("RKN_PIC", "https://telegra.ph/file/b746aadfe59959eb76f59.jpg")
-    ADMIN = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '6705898491').split()]
-    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002123429361"))
+    E_LOADING = '<tg-emoji emoji-id="5350752364246606166">✍️</tg-emoji>'
+    E_LIMIT = '<tg-emoji emoji-id="5424857974784925603">🚫</tg-emoji>'
+    E_SUCCESS = '<tg-emoji emoji-id="5260463209562776385">✅</tg-emoji>'
+    E_ERROR = '<tg-emoji emoji-id="5318840353510408444">🔴</tg-emoji>'
+    E_TIP = '<tg-emoji emoji-id="4968003407315993509">💡</tg-emoji>'
+    E_MENU = '<tg-emoji emoji-id="5449601904147440135">👑</tg-emoji>'
+    E_USER = '<tg-emoji emoji-id="5974048815789903111">👤</tg-emoji>'
+    E_ID = '<tg-emoji emoji-id="5974526806995242353">🆔</tg-emoji>'
+    E_TAG = '<tg-emoji emoji-id="5240228673738527951">🏷️</tg-emoji>'
+    E_STAT = '<tg-emoji emoji-id="4967519884192777037">📊</tg-emoji>'
+    E_GLOBE = '<tg-emoji emoji-id="5231489647946768652">🌐</tg-emoji>'
+    E_SOS = '<tg-emoji emoji-id="6301027265899661025">🆘</tg-emoji>'
+    E_SHIELD = '<tg-emoji emoji-id="5352888345972187597">🛡️</tg-emoji>'
+    E_CALENDAR = '<tg-emoji emoji-id="5413879192267805083">📅</tg-emoji>'
+    E_IOS = '<tg-emoji emoji-id="5350556204500263431">🍏</tg-emoji>'
+    E_ANDROID = '<tg-emoji emoji-id="5303145396254563405">🤖</tg-emoji>'
+
+    RKN_PIC = os.environ.get("RKN_PIC", "https://avatars.githubusercontent.com/u/164619909?v=4")
+    LOADING_GIF = os.environ.get("LOADING_GIF", "").strip() or None
+    _st = [x.strip() for x in os.environ.get("LOADING_STICKER", "").split(",") if x and x.strip()]
+    LOADING_STICKER = _st if _st else None
+    ADMIN = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '5341455835').split()]
+    try:
+        LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "0")) or None
+    except (ValueError, TypeError):
+        LOG_CHANNEL = None
 
     # free upload limit 
     FREE_UPLOAD_LIMIT = 6442450944 # calculation 6*1024*1024*1024=results
@@ -57,13 +77,26 @@ class Config(object):
     # premium mode feature ✅
     UPLOAD_LIMIT_MODE = True 
     PREMIUM_MODE = True 
-    
-    #force subs
+    PREMIUM_LINK = os.environ.get("PREMIUM_LINK", "https://t.me/DoraTeamMods")
+
+    _fs = (os.environ.get("FORCE_SUB") or "").strip()
+    if _fs in ("", "0"):
+        FORCE_SUB = 0
+    else:
+        try:
+            FORCE_SUB = int(_fs)
+        except ValueError:
+            FORCE_SUB = _fs
+
+    APPROVAL_REQUIRED = os.environ.get("APPROVAL_REQUIRED", "false").strip().lower() in ("1", "true", "yes")
     try:
-        FORCE_SUB = int(os.environ.get("FORCE_SUB", "")) 
-    except:
-        FORCE_SUB = os.environ.get("FORCE_SUB", "Digital_Botz")
-        
+        _aid = (os.environ.get("APPROVAL_GROUP_ID") or "0").strip()
+        APPROVAL_GROUP_ID = int(_aid) if _aid else None
+        if APPROVAL_GROUP_ID == 0:
+            APPROVAL_GROUP_ID = None
+    except (ValueError, TypeError):
+        APPROVAL_GROUP_ID = None
+
     # wes response configuration     
     PORT = int(os.environ.get("PORT", "8080"))
     BOT_UPTIME = time.time()
@@ -77,7 +110,7 @@ class rkn(object):
 𝚈ᴏᴜ 𝙲ᴀɴ 𝙰ʟsᴏ 𝙲ᴏɴᴠᴇʀᴛ 𝚅ɪᴅᴇᴏ 𝚃ᴏ 𝙵ɪʟᴇ & 𝙵ɪʟᴇ 𝚃ᴏ 𝚅ɪᴅᴇᴏ
 𝚃𝙷𝙸𝚂 𝙱𝙾𝚃 𝙰𝙻𝚂𝙾 𝚂𝚄𝙿𝙿𝙾𝚁𝚃𝚂 𝙲𝚄𝚂𝚃𝙾𝙼 𝚃𝙷𝚄𝙼𝙱𝙽𝙰𝙸𝙻 𝙰𝙽𝙳 𝙲𝚄𝚂𝚃𝙾𝙼 𝙲𝙰𝙿𝚃𝙸𝙾𝙽
 
-Tʜɪs Bᴏᴛ Wᴀs Cʀᴇᴀᴛᴇᴅ Bʏ : @Digital_Botz 💞</b>"""
+Tʜɪs Bᴏᴛ Wᴀs Cʀᴇᴀᴛᴇᴅ Bʏ : ThanhDora | @DoraTeamMods 💞</b>"""
 
     ABOUT_TXT = """<b>╭───────────⍟
 ├🤖 ᴍy ɴᴀᴍᴇ : {}
@@ -86,7 +119,7 @@ Tʜɪs Bᴏᴛ Wᴀs Cʀᴇᴀᴛᴇᴅ Bʏ : @Digital_Botz 💞</b>"""
 ├📕 Lɪʙʀᴀʀy : {}
 ├✏️ Lᴀɴɢᴜᴀɢᴇ: {}
 ├💾 Dᴀᴛᴀ Bᴀꜱᴇ: {}
-├📊 ᴠᴇʀsɪᴏɴ: <a href=https://github.com/DigitalBotz/Digital-Rename-Bot>{}</a></b>     
+├📊 ᴠᴇʀsɪᴏɴ: <a href=https://github.com/ThanhDora>{}</a></b>     
 ╰───────────────⍟ """
 
     HELP_TXT = """
@@ -94,7 +127,7 @@ Tʜɪs Bᴏᴛ Wᴀs Cʀᴇᴀᴛᴇᴅ Bʏ : @Digital_Botz 💞</b>"""
 
 ✏️ <b><u>Hᴏᴡ Tᴏ Rᴇɴᴀᴍᴇ A Fɪʟᴇ</u></b>
 <b>•></b> Sᴇɴᴅ Aɴy Fɪʟᴇ Aɴᴅ Tyᴩᴇ Nᴇᴡ Fɪʟᴇ Nɴᴀᴍᴇ \nAɴᴅ Aᴇʟᴇᴄᴛ Tʜᴇ Fᴏʀᴍᴀᴛ [ document, video, audio ].           
-ℹ️ 𝗔𝗻𝘆 𝗢𝘁𝗵𝗲𝗿 𝗛𝗲𝗹𝗽 𝗖𝗼𝗻𝘁𝗮𝗰𝘁 :- <a href=https://t.me/DigitalBotz_Support>𝑺𝑼𝑷𝑷𝑶𝑹𝑻 𝑮𝑹𝑶𝑼𝑷</a>
+ℹ️ 𝗔𝗻𝘆 𝗢𝘁𝗵𝗲𝗿 𝗛𝗲𝗹𝗽 𝗖𝗼𝗻𝘁𝗮𝗰𝘁 :- <a href=https://t.me/DoraTeamMods>@DoraTeamMods</a>
 """
 
     UPGRADE_PREMIUM= """
@@ -170,13 +203,13 @@ V𝟹.𝟶.𝟶 [STABLE]
 
 ☞ Fᴏʀ Exᴀᴍᴘʟᴇ:-
 
-`--change-title @Rkn_Botz
---change-video-title @Rkn_Botz
---change-audio-title @Rkn_Botz
---change-subtitle-title @Rkn_Botz
---change-author @Rkn_Botz`
+`--change-title @DoraTeamMods
+--change-video-title @DoraTeamMods
+--change-audio-title @DoraTeamMods
+--change-subtitle-title @DoraTeamMods
+--change-author @DoraTeamMods`
 
-📥 Fᴏʀ Hᴇʟᴘ Cᴏɴᴛ. @Digital_Botz
+📥 Fᴏʀ Hᴇʟᴘ Cᴏɴᴛ. @DoraTeamMods
 """
     
     CUSTOM_FILE_NAME = """
@@ -191,20 +224,16 @@ you can pre-add a prefix and suffix along with your new filename
 ➢ /see_suffix - Tᴏ Sᴇᴇ Yᴏᴜʀ Sᴜғғɪx !!
 ➢ /del_suffix - Tᴏ Dᴇʟᴇᴛᴇ Yᴏᴜʀ Sᴜғғɪx !!
 
-Exᴀᴍᴩʟᴇ:- `/set_suffix @Digital_Botz`
-Exᴀᴍᴩʟᴇ:- `/set_prefix @Digital_Botz`
+Exᴀᴍᴩʟᴇ:- `/set_suffix @DoraTeamMods`
+Exᴀᴍᴩʟᴇ:- `/set_prefix @DoraTeamMods`
 """
     
-    #⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-#⚠️ Dᴏɴ'ᴛ Rᴇᴍᴏᴠᴇ Oᴜʀ Cʀᴇᴅɪᴛꜱ @RknDeveloper🙏🥲
-    # ᴡʜᴏᴇᴠᴇʀ ɪs ᴅᴇᴘʟᴏʏɪɴɢ ᴛʜɪs ʀᴇᴘᴏ ɪs ᴡᴀʀɴᴇᴅ ⚠️ ᴅᴏ ɴᴏᴛ ʀᴇᴍᴏᴠᴇ ᴄʀᴇᴅɪᴛs ɢɪᴠᴇɴ ɪɴ ᴛʜɪs ʀᴇᴘᴏ #ғɪʀsᴛ ᴀɴᴅ ʟᴀsᴛ ᴡᴀʀɴɪɴɢ ⚠️
     DEV_TXT = """<b><u>Sᴩᴇᴄɪᴀʟ Tʜᴀɴᴋꜱ & Dᴇᴠᴇʟᴏᴩᴇʀꜱ</b></u>
     
-» 𝗦𝗢𝗨𝗥𝗖𝗘 𝗖𝗢𝗗𝗘 : <a href=https://github.com/DigitalBotz/Digital-Rename-Bot>Digital-Rename-Bot</a>
+» 𝗦𝗢𝗨𝗥𝗖𝗘 𝗖𝗢𝗗𝗘 : <a href=https://github.com/ThanhDora>ThanhDora</a>
 
-• ❣️ <a href=https://github.com/RknDeveloper>RknDeveloper</a>
-• ❣️ <a href=https://github.com/DigitalBotz>DigitalBotz</a>
-• ❣️ <a href=https://github.com/JayMahakal98>Jay Mahakal</a> """
+• ❣️ <a href=https://github.com/ThanhDora>ThanhDora</a>
+• ❣️ Doratem | <a href=https://t.me/DoraTeamMods>@DoraTeamMods</a> """
     # ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
     SEND_METADATA = """
@@ -212,13 +241,13 @@ Exᴀᴍᴩʟᴇ:- `/set_prefix @Digital_Botz`
 
 ☞ Fᴏʀ Exᴀᴍᴘʟᴇ:-
 
-`--change-title @Rkn_Botz
---change-video-title @Rkn_Botz
---change-audio-title @Rkn_Botz
---change-subtitle-title @Rkn_Botz
---change-author @Rkn_Botz`
+`--change-title @DoraTeamMods
+--change-video-title @DoraTeamMods
+--change-audio-title @DoraTeamMods
+--change-subtitle-title @DoraTeamMods
+--change-author @DoraTeamMods`
 
-📥 Fᴏʀ Hᴇʟᴘ Cᴏɴᴛ. @Digital_Botz
+📥 Fᴏʀ Hᴇʟᴘ Cᴏɴᴛ. @DoraTeamMods
 """
     
     RKN_PROGRESS = """<b>
@@ -231,8 +260,4 @@ Exᴀᴍᴩʟᴇ:- `/set_prefix @Digital_Botz`
 ┣⪼ ⏰ 𝗘𝗧𝗔: {4}
 ╰━━━━━━━━◉🔥◉━━━━━━━━╯</b>"""
 
-# Rkn Developer 
-# Don't Remove Credit 😔
-# Telegram Channel @RknDeveloper & @Rkn_Botz
-# Developer @RknDeveloperr
-# Update Channel @Digital_Botz & @DigitalBotz_Support
+# ThanhDora | Doratem | https://github.com/ThanhDora | @DoraTeamMods

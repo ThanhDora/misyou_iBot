@@ -1,30 +1,6 @@
-# (c) @RknDeveloperr
-# Rkn Developer 
-# Don't Remove Credit 😔
-# Telegram Channel @RknDeveloper & @Rkn_Botz
-# Developer @RknDeveloperr
+# ThanhDora | Doratem | https://github.com/ThanhDora | @DoraTeamMods
 """
 Apache License 2.0
-Copyright (c) 2022 @Digital_Botz
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Telegram Link : https://t.me/Digital_Botz 
-Repo Link : https://github.com/DigitalBotz/Digital-Rename-Bot
-License Link : https://github.com/DigitalBotz/Digital-Rename-Bot/blob/main/LICENSE
 """
 
 # extra imports
@@ -34,14 +10,33 @@ from helper.utils import get_seconds, humanbytes
 import os, sys, time, asyncio, logging, datetime, pytz, traceback
 
 # pyrogram imports
-from pyrogram.types import Message
+from pyrogram.types import Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait, InputUserDeactivated, UserIsBlocked, PeerIdInvalid
 
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
- 
+
+
+async def resolve_user(client, arg):
+    arg = (arg or "").strip().lstrip("@")
+    if not arg:
+        return None, None
+    try:
+        uid = int(arg)
+        user = await client.get_users(uid)
+        return user.id, user
+    except ValueError:
+        try:
+            user = await client.get_users(arg)
+            return user.id, user
+        except Exception:
+            return None, None
+    except Exception:
+        return None, None
+
+
 @Client.on_message(filters.command(["stats", "status"]) & filters.user(Config.ADMIN))
 async def get_stats(bot, message):
     total_users = await digital_botz.total_users_count()
@@ -54,7 +49,7 @@ async def get_stats(bot, message):
     rkn = await message.reply('**ᴘʀᴏᴄᴇssɪɴɢ.....**')    
     end_t = time.time()
     time_taken_s = (end_t - start_t) * 1000
-    await rkn.edit(text=f"**--Bᴏᴛ Sᴛᴀᴛᴜꜱ--** \n\n**⌚️ Bᴏᴛ Uᴩᴛɪᴍᴇ:** {uptime} \n**🐌 Cᴜʀʀᴇɴᴛ Pɪɴɢ:** `{time_taken_s:.3f} ᴍꜱ` \n**👭 Tᴏᴛᴀʟ Uꜱᴇʀꜱ:** `{total_users}`\n**💸 ᴛᴏᴛᴀʟ ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀs:** `{total_premium_users}`")
+    await rkn.edit(text=f"{Config.E_STAT} <b>Bot Status</b>\n\n{Config.E_CALENDAR} Uptime: <code>{uptime}</code>\n{Config.E_STAT} Ping: <code>{time_taken_s:.3f} ms</code>\n{Config.E_USER} Total users: <code>{total_users}</code>\n{Config.E_MENU} Premium users: <code>{total_premium_users}</code>", parse_mode="html")
 
 # bot logs process 
 @Client.on_message(filters.command('logs') & filters.user(Config.ADMIN))
@@ -71,22 +66,25 @@ async def add_premium(client, message):
      
     if client.uploadlimit:
         if len(message.command) < 4:
-            return await message.reply_text("Usage : /addpremium user_id Plan_Type (e.g... `Pro`, `UltraPro`) time (e.g., '1 day for days', '1 hour for hours', or '1 min for minutes', or '1 month for months' or '1 year for year')", quote=True)
+            return await message.reply_text("Usage : /addpremium @username hoặc user_id Plan_Type time\n\nPlan: <code>VIP</code> | <code>Pro</code> | <code>UltraPro</code>\nTime: 1 day | 1 month | 1 year", quote=True)
 
-        user_id = int(message.command[1])
+        user_id, user = await resolve_user(client, message.command[1])
+        if user_id is None:
+            return await message.reply_text("Không tìm thấy user. Dùng @username hoặc user_id.", quote=True)
         plan_type = message.command[2]
 
-        if plan_type not in ["Pro", "UltraPro"]:
-            return await message.reply_text("Invalid Plan Type. Please use 'Pro' or 'UltraPro'.", quote=True)
+        if plan_type not in ["VIP", "Pro", "UltraPro"]:
+            return await message.reply_text("Invalid Plan. Use: VIP | Pro | UltraPro", quote=True)
 
         time_string = " ".join(message.command[3:])
 
         time_zone = datetime.datetime.now(pytz.timezone("Asia/Kolkata"))
         current_time = time_zone.strftime("%d-%m-%Y\n⏱️ ᴊᴏɪɴɪɴɢ ᴛɪᴍᴇ : %I:%M:%S %p")
 
-        user = await client.get_users(user_id)
-
-        if plan_type == "Pro":
+        if plan_type == "VIP":
+            limit = 53687091200
+            type = "VIP"
+        elif plan_type == "Pro":
             limit = 107374182400
             type = "Pro"
         elif plan_type == "UltraPro":
@@ -99,7 +97,7 @@ async def add_premium(client, message):
 
         expiry_time = datetime.datetime.now() + datetime.timedelta(seconds=seconds)
         user_data = {"id": user_id, "expiry_time": expiry_time}
-        await digital_botz.addpremium(user_id, user_data, limit, type)
+        await digital_botz.add_premium(user_id, user_data, limit, type)
 
         user_data = await digital_botz.get_user_data(user_id)
         limit = user_data.get('uploadlimit', 0)
@@ -112,27 +110,27 @@ async def add_premium(client, message):
 
         await client.send_message(
                 chat_id=user_id,
-                text=f"👋 ʜᴇʏ {user.mention},\nᴛʜᴀɴᴋ ʏᴏᴜ ꜰᴏʀ ᴘᴜʀᴄʜᴀꜱɪɴɢ ᴘʀᴇᴍɪᴜᴍ.\nᴇɴᴊᴏʏ !! ✨🎉\n\n⏰ ᴘʀᴇᴍɪᴜᴍ ᴀᴄᴄᴇꜱꜱ : <code>{time}</code>\nᴘʟᴀɴ :- `{type}`\nᴅᴀɪʟʏ ᴜᴘʟᴏᴀᴅ ʟɪᴍɪᴛ :- `{humanbytes(limit)}`\n⏳ ᴊᴏɪɴɪɴɢ ᴅᴀᴛᴇ : {current_time}\n\n⌛️ ᴇxᴘɪʀʏ ᴅᴀᴛᴇ : {expiry_str_in_ist}", disable_web_page_preview=True              
+                text=f"👋 ʜᴇʏ {user.mention},\nᴛʜᴀɴᴋ ʏᴏᴜ ꜰᴏʀ ᴘᴜʀᴄʜᴀꜱɪɴɢ ᴘʀᴇᴍɪᴜᴍ.\nᴇɴᴊᴏʏ !! ✨🎉\n\n⏰ ᴘʀᴇᴍɪᴜᴍ ᴀᴄᴄᴇꜱꜱ : <code>{time_string}</code>\nᴘʟᴀɴ :- `{type}`\nᴅᴀɪʟʏ ᴜᴘʟᴏᴀᴅ ʟɪᴍɪᴛ :- `{humanbytes(limit)}`\n⏳ ᴊᴏɪɴɪɴɢ ᴅᴀᴛᴇ : {current_time}\n\n⌛️ ᴇxᴘɪʀʏ ᴅᴀᴛᴇ : {expiry_str_in_ist}", disable_web_page_preview=True              
             )    
 
     else:
         if len(message.command) < 3:
-            return await message.reply_text("Usage : /addpremium user_id time (e.g., '1 day for days', '1 hour for hours', or '1 min for minutes', or '1 month for months' or '1 year for year')", quote=True)
+            return await message.reply_text("Usage : /addpremium @username hoặc user_id time\nVD: 1 day | 1 month | 1 year", quote=True)
 
-        user_id = int(message.command[1])
+        user_id, user = await resolve_user(client, message.command[1])
+        if user_id is None:
+            return await message.reply_text("Không tìm thấy user. Dùng @username hoặc user_id.", quote=True)
         time_string = " ".join(message.command[2:])
 
         time_zone = datetime.datetime.now(pytz.timezone("Asia/Kolkata"))
-        current_time = time_zone.strftime("%d-%m-%Y\n⏱️ ᴊᴏɪɴɪɴɢ ᴛɪᴍᴇ : %I:%M:%S %p")
-
-        user = await client.get_users(user_id)        
+        current_time = time_zone.strftime("%d-%m-%Y\n⏱️ ᴊᴏɪɴɪɴɢ ᴛɪᴍᴇ : %I:%M:%S %p")        
         seconds = await get_seconds(time_string)
         if seconds <= 0:
             return await message.reply_text("Invalid time format. Please use `/addpremium user_id 1 year 1 month 1 day 1 min 10 s`", quote=True)
 
         expiry_time = datetime.datetime.now() + datetime.timedelta(seconds=seconds)
         user_data = {"id": user_id, "expiry_time": expiry_time}
-        await digital_botz.addpremium(user_id, user_data)
+        await digital_botz.add_premium(user_id, user_data)
         data = await digital_botz.get_user(user_id)
         expiry = data.get("expiry_time")
         expiry_str_in_ist = expiry.astimezone(pytz.timezone("Asia/Kolkata")).strftime("%d-%m-%Y\n⏱️ ᴇxᴘɪʀʏ ᴛɪᴍᴇ : %I:%M:%S %p")
@@ -141,7 +139,7 @@ async def add_premium(client, message):
 
         await client.send_message(
                 chat_id=user_id,
-                text=f"👋 ʜᴇʏ {user.mention},\nᴛʜᴀɴᴋ ʏᴏᴜ ꜰᴏʀ ᴘᴜʀᴄʜᴀꜱɪɴɢ ᴘʀᴇᴍɪᴜᴍ.\nᴇɴᴊᴏʏ !! ✨🎉\n\n⏰ ᴘʀᴇᴍɪᴜᴍ ᴀᴄᴄᴇꜱꜱ : <code>{time}</code>\n⏳ ᴊᴏɪɴɪɴɢ ᴅᴀᴛᴇ : {current_time}\n\n⌛️ ᴇxᴘɪʀʏ ᴅᴀᴛᴇ : {expiry_str_in_ist}", disable_web_page_preview=True              
+                text=f"👋 ʜᴇʏ {user.mention},\nᴛʜᴀɴᴋ ʏᴏᴜ ꜰᴏʀ ᴘᴜʀᴄʜᴀꜱɪɴɢ ᴘʀᴇᴍɪᴜᴍ.\nᴇɴᴊᴏʏ !! ✨🎉\n\n⏰ ᴘʀᴇᴍɪᴜᴍ ᴀᴄᴄᴇꜱꜱ : <code>{time_string}</code>\n⏳ ᴊᴏɪɴɪɴɢ ᴅᴀᴛᴇ : {current_time}\n\n⌛️ ᴇxᴘɪʀʏ ᴅᴀᴛᴇ : {expiry_str_in_ist}", disable_web_page_preview=True              
             )    
      
 
@@ -151,16 +149,108 @@ async def remove_premium(bot, message):
         return await message.reply_text("premium mode disabled ✅")
      
     if len(message.command) == 2:
-        user_id = int(message.command[1])  # Convert the user_id to integer
-        user = await bot.get_users(user_id)
+        user_id, user = await resolve_user(bot, message.command[1])
+        if user_id is None:
+            return await message.reply_text("Không tìm thấy user. Dùng @username hoặc user_id.", quote=True)
         if await digital_botz.has_premium_access(user_id):
             await digital_botz.remove_premium(user_id)
             await message.reply_text(f"ʜᴇʏ {user.mention}, ᴘʀᴇᴍɪᴜᴍ ᴘʟᴀɴ sᴜᴄᴄᴇssғᴜʟʟʏ ʀᴇᴍᴏᴠᴇᴅ.", quote=True)
             await bot.send_message(chat_id=user_id, text=f"<b>ʜᴇʏ {user.mention},\n\n✨ ʏᴏᴜʀ ᴀᴄᴄᴏᴜɴᴛ ʜᴀs ʙᴇᴇɴ ʀᴇᴍᴏᴠᴇᴅ ᴛᴏ ᴏᴜʀ ᴘʀᴇᴍɪᴜᴍ ᴘʟᴀɴ\n\nᴄʜᴇᴄᴋ ʏᴏᴜʀ ᴘʟᴀɴ ʜᴇʀᴇ /myplan</b>")
         else:
-            await message.reply_text("ᴜɴᴀʙʟᴇ ᴛᴏ ʀᴇᴍᴏᴠᴇ ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀ !\nᴀʀᴇ ʏᴏᴜ ꜱᴜʀᴇ, ɪᴛ ᴡᴀꜱ ᴀ ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀ ɪᴅ ?", quote=True)
+            await message.reply_text("User không có premium hoặc không tìm thấy.", quote=True)
     else:
-        await message.reply_text("ᴜꜱᴀɢᴇ : /remove_premium ᴜꜱᴇʀ ɪᴅ", quote=True)
+        await message.reply_text("Usage: /removepremium @username hoặc user_id", quote=True)
+
+
+@Client.on_message(filters.command(["approve", "duyet"]) & filters.user(Config.ADMIN))
+async def approve_user(client, message):
+    if not getattr(Config, "APPROVAL_REQUIRED", False):
+        return await message.reply_text("Tính năng duyệt user chưa bật. Thêm APPROVAL_REQUIRED=true vào .env", quote=True)
+    if len(message.command) < 2:
+        return await message.reply_text("Usage: /approve @username hoặc user_id", quote=True)
+    user_id, user = await resolve_user(client, message.command[1])
+    if user_id is None:
+        return await message.reply_text("Không tìm thấy user.", quote=True)
+    await digital_botz.set_approved(user_id, True)
+    await message.reply_text(f"✅ Đã duyệt {user.mention} (`{user_id}`). User có thể dùng bot.", quote=True)
+    try:
+        await client.send_message(user_id, "✅ **Bạn đã được admin duyệt.** Bạn có thể dùng bot ngay.")
+    except Exception:
+        pass
+
+
+@Client.on_message(filters.command(["unapprove", "hoduyet"]) & filters.user(Config.ADMIN))
+async def unapprove_user(client, message):
+    if not getattr(Config, "APPROVAL_REQUIRED", False):
+        return await message.reply_text("Tính năng duyệt user chưa bật.", quote=True)
+    if len(message.command) < 2:
+        return await message.reply_text("Usage: /unapprove @username hoặc user_id", quote=True)
+    user_id, user = await resolve_user(client, message.command[1])
+    if user_id is None:
+        return await message.reply_text("Không tìm thấy user.", quote=True)
+    await digital_botz.set_approved(user_id, False)
+    await message.reply_text(f"❌ Đã hủy duyệt {user.mention} (`{user_id}`).", quote=True)
+
+
+@Client.on_message(filters.command(["pending", "choduyet"]) & filters.user(Config.ADMIN))
+async def pending_users(client, message):
+    if not getattr(Config, "APPROVAL_REQUIRED", False):
+        return await message.reply_text("Tính năng duyệt user chưa bật.", quote=True)
+    count = 0
+    text = "**⏳ User chờ duyệt:**\n\n"
+    async for u in digital_botz.get_pending_users():
+        count += 1
+        try:
+            us = await client.get_users(u["_id"])
+            text += f"• {us.mention} `{u['_id']}` — /approve `{u['_id']}`\n"
+        except Exception:
+            text += f"• `{u['_id']}` — /approve `{u['_id']}`\n"
+        if count >= 50:
+            text += "\n_... (tối đa 50)_"
+            break
+    if count == 0:
+        text = "Không có user nào chờ duyệt."
+    await message.reply_text(text, quote=True)
+
+
+@Client.on_callback_query(filters.regex(r"^aprv_\d+$") & filters.user(Config.ADMIN))
+async def cb_approve_pending(c: Client, q: CallbackQuery):
+    if not getattr(Config, "APPROVAL_REQUIRED", False):
+        return await q.answer("Tính năng duyệt chưa bật.", show_alert=True)
+    uid = int(q.data.split("_", 1)[1])
+    await digital_botz.set_approved(uid, True)
+    try:
+        await q.message.edit_text(
+            q.message.text + "\n\n✅ **Đã duyệt bởi** " + (q.from_user.mention or str(q.from_user.id)),
+            reply_markup=None
+        )
+    except Exception:
+        pass
+    await q.answer("Đã duyệt user.")
+    try:
+        await c.send_message(uid, "✅ **Bạn đã được admin duyệt.** Bạn có thể dùng bot ngay.")
+    except Exception:
+        pass
+
+
+@Client.on_callback_query(filters.regex(r"^rej_\d+$") & filters.user(Config.ADMIN))
+async def cb_reject_pending(c: Client, q: CallbackQuery):
+    if not getattr(Config, "APPROVAL_REQUIRED", False):
+        return await q.answer("Tính năng duyệt chưa bật.", show_alert=True)
+    uid = int(q.data.split("_", 1)[1])
+    await digital_botz.set_approved(uid, False)
+    try:
+        await q.message.edit_text(
+            q.message.text + "\n\n❌ **Đã từ chối bởi** " + (q.from_user.mention or str(q.from_user.id)),
+            reply_markup=None
+        )
+    except Exception:
+        pass
+    await q.answer("Đã từ chối.")
+    try:
+        await c.send_message(uid, "❌ **Admin đã từ chối yêu cầu.** Bạn không thể sử dụng bot.")
+    except Exception:
+        pass
 
 
 # Restart to cancell all process 
@@ -202,19 +292,20 @@ async def restart_bot(b, m):
 async def ban(c: Client, m: Message):
     if len(m.command) == 1:
         await m.reply_text(
-            f"Use this command to ban any user from the bot.\n\n"
-            f"Usage:\n\n"
-            f"`/ban user_id ban_duration ban_reason`\n\n"
-            f"Eg: `/ban 1234567 28 You misused me.`\n"
-            f"This will ban user with id `1234567` for `28` days for the reason `You misused me`.",
+            f"Usage: `/ban @username hoặc user_id ban_duration ban_reason`\n\n"
+            f"VD: `/ban @user 28 Vi phạm` hoặc `/ban 1234567 28 Vi phạm`",
             quote=True
         )
         return
 
     try:
-        user_id = int(m.command[1])
+        if len(m.command) < 4:
+            return await m.reply_text("Thiếu tham số. Dùng: /ban @username duration reason", quote=True)
+        user_id, _ = await resolve_user(c, m.command[1])
+        if user_id is None:
+            return await m.reply_text("Không tìm thấy user. Dùng @username hoặc user_id.", quote=True)
         ban_duration = int(m.command[2])
-        ban_reason = ' '.join(m.command[3:])
+        ban_reason = ' '.join(m.command[3:]) or "N/A"
         ban_log_text = f"Banning user {user_id} for {ban_duration} days for the reason {ban_reason}."
         try:
             await c.send_message(user_id,              
@@ -236,20 +327,39 @@ async def ban(c: Client, m: Message):
         )
 
 
+@Client.on_message(filters.private & filters.command(["deleteuser", "deluser", "xoaten"]) & filters.user(Config.ADMIN))
+async def deleteuser(c: Client, m: Message):
+    if len(m.command) < 2:
+        await m.reply_text(
+            "Usage: `/deleteuser @username` hoặc `/deleteuser user_id`\n\nXoá user khỏi bot; khi /start lại sẽ như user mới (cần duyệt nếu bật approval).",
+            quote=True
+        )
+        return
+    try:
+        user_id, user = await resolve_user(c, m.command[1])
+        if user_id is None:
+            return await m.reply_text("Không tìm thấy user. Dùng @username hoặc user_id.", quote=True)
+        await digital_botz.delete_user(user_id)
+        name = (user and getattr(user, "first_name", None)) or user_id
+        await m.reply_text(f"Đã xoá user {name} (id: {user_id}) khỏi bot. Khi /start lại sẽ như user mới.", quote=True)
+    except Exception:
+        traceback.print_exc()
+        await m.reply_text(f"Lỗi: `{traceback.format_exc()}`", quote=True)
+
+
 @Client.on_message(filters.private & filters.command("unban") & filters.user(Config.ADMIN))
 async def unban(c: Client, m: Message):
     if len(m.command) == 1:
         await m.reply_text(
-            f"Use this command to unban any user.\n\n"
-            f"Usage:\n\n`/unban user_id`\n\n"
-            f"Eg: `/unban 1234567`\n"
-            f"This will unban user with id `1234567`.",
+            f"Usage: `/unban @username hoặc user_id`\n\nVD: `/unban @user` hoặc `/unban 1234567`",
             quote=True
         )
         return
 
     try:
-        user_id = int(m.command[1])
+        user_id, _ = await resolve_user(c, m.command[1])
+        if user_id is None:
+            return await m.reply_text("Không tìm thấy user. Dùng @username hoặc user_id.", quote=True)
         unban_log_text = f"Unbanning user {user_id}"
         try:
             await c.send_message(user_id, f"Your ban was lifted!")
@@ -292,7 +402,8 @@ async def _banned_users(_, m: Message):
      
 @Client.on_message(filters.command("broadcast") & filters.user(Config.ADMIN) & filters.reply)
 async def broadcast_handler(bot: Client, m: Message):
-    await bot.send_message(Config.LOG_CHANNEL, f"{m.from_user.mention} or {m.from_user.id} Iꜱ ꜱᴛᴀʀᴛᴇᴅ ᴛʜᴇ Bʀᴏᴀᴅᴄᴀꜱᴛ......")
+    if Config.LOG_CHANNEL:
+        await bot.send_message(Config.LOG_CHANNEL, f"{m.from_user.mention} or {m.from_user.id} Iꜱ ꜱᴛᴀʀᴛᴇᴅ ᴛʜᴇ Bʀᴏᴀᴅᴄᴀꜱᴛ......")
     all_users = await digital_botz.get_all_users()
     broadcast_msg = m.reply_to_message
     sts_msg = await m.reply_text("Bʀᴏᴀᴅᴄᴀꜱᴛ Sᴛᴀʀᴛᴇᴅ..!") 
@@ -336,7 +447,4 @@ async def send_msg(user_id, message):
         return 500
  
 
-# Rkn Developer 
-# Don't Remove Credit 😔
-# Telegram Channel @RknDeveloper & @Rkn_Botz
-# Developer @RknDeveloperr
+# ThanhDora | Doratem | @DoraTeamMods
