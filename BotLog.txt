@@ -2124,3 +2124,9 @@
 2026-02-24 21:47:04,304 - pyrogram.session.session - INFO - NetworkTask stopped
 2026-02-24 21:47:04,305 - pyrogram.connection.connection - INFO - Disconnected
 2026-02-24 21:47:04,305 - pyrogram.session.session - INFO - Session stopped
+2026-02-24 22:16:53,029 - root - INFO - Stop signal received (SIGTERM). Exiting...
+2026-02-24 22:16:53,739 - pyrogram.dispatcher - INFO - Stopped 200 HandlerTasks
+2026-02-24 22:16:54,449 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-3' coro=<Session.recv_worker() running at /Users/lethanhdat/Downloads/Digital-Rename-Bot/venv/lib/python3.14/site-packages/pyrogram/session/session.py:311> wait_for=<Future pending cb=[Task.task_wakeup()]>>
+2026-02-24 22:16:54,449 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-7' coro=<Session.ping_worker() running at /Users/lethanhdat/Downloads/Digital-Rename-Bot/venv/lib/python3.14/site-packages/pyrogram/session/session.py:287> wait_for=<Future pending cb=[Task.task_wakeup()]>>

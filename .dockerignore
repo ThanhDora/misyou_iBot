@@ -1,0 +1,12 @@
+.env
+.env.*
+*.session
+*.session-journal
+venv
+__pycache__
+.git
+*.pyc
+BotLog.txt
+Renames
+Metadata
+*.log
