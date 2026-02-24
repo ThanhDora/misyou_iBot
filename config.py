@@ -1,4 +1,4 @@
-# (c) ThanhDora / Doratem
+# (c) ThanhDora / DoraTeam
 # https://github.com/ThanhDora
 # Telegram @DoraTeamMods
 """
@@ -233,7 +233,7 @@ Exᴀᴍᴩʟᴇ:- `/set_prefix @DoraTeamMods`
 » 𝗦𝗢𝗨𝗥𝗖𝗘 𝗖𝗢𝗗𝗘 : <a href=https://github.com/ThanhDora>ThanhDora</a>
 
 • ❣️ <a href=https://github.com/ThanhDora>ThanhDora</a>
-• ❣️ Doratem | <a href=https://t.me/DoraTeamMods>@DoraTeamMods</a> """
+• ❣️ DoraTeam | <a href=https://t.me/DoraTeamMods>@DoraTeamMods</a> """
     # ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
     SEND_METADATA = """
@@ -260,4 +260,4 @@ Exᴀᴍᴩʟᴇ:- `/set_prefix @DoraTeamMods`
 ┣⪼ ⏰ 𝗘𝗧𝗔: {4}
 ╰━━━━━━━━◉🔥◉━━━━━━━━╯</b>"""
 
-# ThanhDora | Doratem | https://github.com/ThanhDora | @DoraTeamMods
+# ThanhDora | DoraTeam | https://github.com/ThanhDora | @DoraTeamMods

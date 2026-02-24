@@ -1,4 +1,4 @@
-# ThanhDora | Doratem | https://github.com/ThanhDora | @DoraTeamMods
+# ThanhDora | DoraTeam | https://github.com/ThanhDora | @DoraTeamMods
 """
 Apache License 2.0
 """
@@ -391,8 +391,7 @@ def _itunes_lookup_requests(bundle_id):
                 continue
             app = data["results"][0]
             icon = app.get("artworkUrl512") or app.get("artworkUrl100")
-            if icon:
-                return {"icon_512": app.get("artworkUrl512"), "icon_100": app.get("artworkUrl100"), "icon": icon, "track_name": app.get("trackName")}
+            return {"icon_512": app.get("artworkUrl512"), "icon_100": app.get("artworkUrl100"), "icon": icon, "track_name": app.get("trackName"), "version": app.get("version")}
         except Exception:
             continue
     return None
@@ -714,6 +713,11 @@ async def fetch_itunes_track_name(bundle_id):
     return None
 
 
+def _fetch_itunes_version_sync(bundle_id):
+    info = _itunes_lookup_requests(bundle_id)
+    return (info or {}).get("version") or None
+
+
 async def fetch_itunes_version(bundle_id):
     bundle_id = (bundle_id or "").strip()
     if not bundle_id:
@@ -722,11 +726,16 @@ async def fetch_itunes_version(bundle_id):
         try:
             assets = await get_assets(bundle_id)
             if assets:
-                v = (assets.get("version") or "").strip()
-                if v:
-                    return v
+                v = assets.get("version")
+                if v is not None and str(v).strip():
+                    return str(v).strip()
         except Exception:
             pass
+    try:
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, _fetch_itunes_version_sync, bundle_id)
+    except Exception:
+        pass
     return None
 
 
@@ -821,4 +830,4 @@ async def fetch_itunes_artwork_and_inject_ipa(bundle_id, ipa_path):
         return modified_ipa, None, None
 
 
-# ThanhDora | Doratem | @DoraTeamMods
+# ThanhDora | DoraTeam | @DoraTeamMods

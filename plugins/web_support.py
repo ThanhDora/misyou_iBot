@@ -1,4 +1,4 @@
-# ThanhDora | Doratem | https://github.com/ThanhDora | @DoraTeamMods
+# ThanhDora | DoraTeam | https://github.com/ThanhDora | @DoraTeamMods
 """
 Apache License 2.0
 """
@@ -94,4 +94,4 @@ async def web_server():
     web_app.add_routes(DigitalRenameBot)
     return web_app
 
-# ThanhDora | Doratem | @DoraTeamMods
+# ThanhDora | DoraTeam | @DoraTeamMods

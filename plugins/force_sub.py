@@ -1,4 +1,4 @@
-# ThanhDora | Doratem | https://github.com/ThanhDora | @DoraTeamMods
+# ThanhDora | DoraTeam | https://github.com/ThanhDora | @DoraTeamMods
 """
 Apache License 2.0
 """
@@ -53,4 +53,4 @@ async def forces_sub(client, message):
         return await message.reply_text(text=text, reply_markup=InlineKeyboardMarkup(buttons))
     return await message.reply_text(text=text, reply_markup=InlineKeyboardMarkup(buttons))
     
-# ThanhDora | Doratem | @DoraTeamMods
+# ThanhDora | DoraTeam | @DoraTeamMods

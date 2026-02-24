@@ -1,4 +1,4 @@
-# ThanhDora | Doratem | https://github.com/ThanhDora | @DoraTeamMods
+# ThanhDora | DoraTeam | https://github.com/ThanhDora | @DoraTeamMods
 """
 Apache License 2.0
 """
@@ -57,4 +57,4 @@ async def query_metadata(bot: Client, query: CallbackQuery):
         except Exception as e:
             print(e)
 
-# ThanhDora | Doratem | @DoraTeamMods
+# ThanhDora | DoraTeam | @DoraTeamMods

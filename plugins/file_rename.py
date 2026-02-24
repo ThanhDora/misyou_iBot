@@ -1,4 +1,4 @@
-# ThanhDora | Doratem | https://github.com/ThanhDora | @DoraTeamMods
+# ThanhDora | DoraTeam | https://github.com/ThanhDora | @DoraTeamMods
 """
 Apache License 2.0
 """
@@ -560,15 +560,16 @@ async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption,
         if not os.path.exists(file_path):
             return None, f"File not found: {file_path}"
         thumb_arg = _make_document_thumb(ph_path)
+        cap_kw = {"parse_mode": ParseMode.HTML} if "<b>" in (caption or "") else {}
         if upload_type == "document":
             filw = await bot.send_document(
                 sender_id,
                 document=file_path,
                 thumb=thumb_arg,
                 caption=caption,
-                parse_mode=ParseMode.HTML,
                 progress=progress_for_pyrogram,
-                progress_args=(f"{RUNNING_ICONS[0]} ĐANG XỬ LÝ...\n{UPLOAD_TEXT}", rkn_processing, time.time()))
+                progress_args=(f"{RUNNING_ICONS[0]} ĐANG XỬ LÝ...\n{UPLOAD_TEXT}", rkn_processing, time.time()),
+                **cap_kw)
         
         elif upload_type == "video":
             filw = await bot.send_video(
@@ -577,9 +578,9 @@ async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption,
                 caption=caption,
                 thumb=thumb_arg,
                 duration=duration,
-                parse_mode=ParseMode.HTML,
                 progress=progress_for_pyrogram,
-                progress_args=(f"{RUNNING_ICONS[0]} ĐANG XỬ LÝ...\n{UPLOAD_TEXT}", rkn_processing, time.time()))
+                progress_args=(f"{RUNNING_ICONS[0]} ĐANG XỬ LÝ...\n{UPLOAD_TEXT}", rkn_processing, time.time()),
+                **cap_kw)
         
         elif upload_type == "audio":
             filw = await bot.send_audio(
@@ -588,9 +589,9 @@ async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption,
                 caption=caption,
                 thumb=thumb_arg,
                 duration=duration,
-                parse_mode=ParseMode.HTML,
                 progress=progress_for_pyrogram,
-                progress_args=(f"{RUNNING_ICONS[0]} ĐANG XỬ LÝ...\n{UPLOAD_TEXT}", rkn_processing, time.time()))
+                progress_args=(f"{RUNNING_ICONS[0]} ĐANG XỬ LÝ...\n{UPLOAD_TEXT}", rkn_processing, time.time()),
+                **cap_kw)
         else:
             return None, f"Unknown upload type: {upload_type}"
         if isinstance(thumb_arg, str) and thumb_arg.endswith(".jpg"):
@@ -859,4 +860,4 @@ async def upload_doc(bot, update):
 
 
 
-# ThanhDora | Doratem | @DoraTeamMods
+# ThanhDora | DoraTeam | @DoraTeamMods

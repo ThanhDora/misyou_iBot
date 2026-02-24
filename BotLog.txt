@@ -1948,3 +1948,179 @@
 2026-02-24 21:41:58,380 - pyrogram.session.session - INFO - NetworkTask stopped
 2026-02-24 21:41:58,380 - pyrogram.connection.connection - INFO - Disconnected
 2026-02-24 21:41:58,380 - pyrogram.session.session - INFO - Session stopped
+2026-02-24 21:44:26,759 - pyrogram.connection.connection - INFO - Connecting...
+2026-02-24 21:44:26,813 - pyrogram.connection.connection - INFO - Connected! Production DC5 - IPv4
+2026-02-24 21:44:26,813 - pyrogram.session.session - INFO - NetworkTask started
+2026-02-24 21:44:26,992 - pyrogram.session.session - INFO - Session initialized: Layer 220
+2026-02-24 21:44:26,992 - pyrogram.session.session - INFO - Device: CPython 3.14.2 - Pyrogram 2.3.69
+2026-02-24 21:44:26,992 - pyrogram.session.session - INFO - System: Darwin 24.3.0 (en)
+2026-02-24 21:44:26,992 - pyrogram.session.session - INFO - Session started
+2026-02-24 21:44:26,993 - pyrogram.session.session - INFO - PingTask started
+2026-02-24 21:44:27,239 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("add_prefix") in group 0 from "plugins.prefix_and_suffix"
+2026-02-24 21:44:27,239 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("delete_prefix") in group 0 from "plugins.prefix_and_suffix"
+2026-02-24 21:44:27,239 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("see_prefix") in group 0 from "plugins.prefix_and_suffix"
+2026-02-24 21:44:27,239 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("add_suffix") in group 0 from "plugins.prefix_and_suffix"
+2026-02-24 21:44:27,239 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("delete_suffix") in group 0 from "plugins.prefix_and_suffix"
+2026-02-24 21:44:27,239 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("see_suffix") in group 0 from "plugins.prefix_and_suffix"
+2026-02-24 21:44:27,240 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("handle_metadata") in group 0 from "plugins.metadata"
+2026-02-24 21:44:27,240 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] CallbackQueryHandler("query_metadata") in group 0 from "plugins.metadata"
+2026-02-24 21:44:27,240 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("_") in group 0 from "plugins.__init__"
+2026-02-24 21:44:27,240 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("sticker_file_id_handler") in group 0 from "plugins.__init__"
+2026-02-24 21:44:27,240 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("forces_sub_handler") in group 0 from "plugins.__init__"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("get_stats") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("log_file") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("add_premium") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("remove_premium") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("approve_user") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("unapprove_user") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("pending_users") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] CallbackQueryHandler("cb_approve_pending") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] CallbackQueryHandler("cb_reject_pending") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("restart_bot") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("ban") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("deleteuser") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("unban") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("_banned_users") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("broadcast_handler") in group 0 from "plugins.admin_panel"
+2026-02-24 21:44:27,243 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("add_caption") in group 0 from "plugins.thumb_and_cap"
+2026-02-24 21:44:27,243 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("delete_caption") in group 0 from "plugins.thumb_and_cap"
+2026-02-24 21:44:27,243 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("see_caption") in group 0 from "plugins.thumb_and_cap"
+2026-02-24 21:44:27,243 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("viewthumb") in group 0 from "plugins.thumb_and_cap"
+2026-02-24 21:44:27,243 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("removethumb") in group 0 from "plugins.thumb_and_cap"
+2026-02-24 21:44:27,243 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("addthumbs") in group 0 from "plugins.thumb_and_cap"
+2026-02-24 21:44:27,244 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("start") in group 0 from "plugins.start_and_cb"
+2026-02-24 21:44:27,244 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("myplan") in group 0 from "plugins.start_and_cb"
+2026-02-24 21:44:27,244 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("plans") in group 0 from "plugins.start_and_cb"
+2026-02-24 21:44:27,244 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] CallbackQueryHandler("cb_handler") in group 0 from "plugins.start_and_cb"
+2026-02-24 21:44:27,244 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("rename_start") in group 0 from "plugins.file_rename"
+2026-02-24 21:44:27,244 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("refunc") in group 0 from "plugins.file_rename"
+2026-02-24 21:44:27,244 - pyrogram.client - INFO - [DigitalRenameBot] Successfully loaded 38 plugins from "plugins"
+2026-02-24 21:44:27,244 - pyrogram.dispatcher - INFO - Started 200 HandlerTasks
+2026-02-24 21:44:32,059 - pyrogram.connection.connection - INFO - Connecting...
+2026-02-24 21:44:32,109 - pyrogram.connection.connection - INFO - Connected! Production DC5 (media) - IPv4
+2026-02-24 21:44:32,111 - pyrogram.session.session - INFO - NetworkTask started
+2026-02-24 21:44:32,295 - pyrogram.session.session - INFO - Session initialized: Layer 220
+2026-02-24 21:44:32,295 - pyrogram.session.session - INFO - Device: CPython 3.14.2 - Pyrogram 2.3.69
+2026-02-24 21:44:32,295 - pyrogram.session.session - INFO - System: Darwin 24.3.0 (en)
+2026-02-24 21:44:32,296 - pyrogram.session.session - INFO - Session started
+2026-02-24 21:44:32,299 - pyrogram.session.session - INFO - PingTask started
+2026-02-24 21:44:32,841 - pyrogram.session.session - INFO - PingTask stopped
+2026-02-24 21:44:32,841 - pyrogram.session.session - INFO - NetworkTask stopped
+2026-02-24 21:44:32,841 - pyrogram.connection.connection - INFO - Disconnected
+2026-02-24 21:44:32,841 - pyrogram.session.session - INFO - Session stopped
+2026-02-24 21:44:33,326 - plugins.file_rename - INFO - Đang giải nén file, tìm plist để đọc Bundle ID. user_id=5341455835 file=com.thanhdora.k.devil.hunter_1.0-4+debug_iphoneos-arm64.deb
+2026-02-24 21:44:33,382 - plugins.file_rename - INFO - Bundle ID từ file | user_id=5341455835 file=com.thanhdora.k.devil.hunter_1.0-4+debug_iphoneos-arm64.deb | bundle_id=com.codedragon.kdemon app= version=
+2026-02-24 21:44:33,382 - plugins.file_rename - INFO - Đang lấy ảnh từ iTunes, bundle_id=com.codedragon.kdemon
+2026-02-24 21:44:37,568 - plugins.file_rename - INFO - Ảnh iTunes đã lấy, sẽ gắn vào file khi upload. bundle_id=com.codedragon.kdemon path=/var/folders/qt/3qlb_6p518v1s1134320_rv80000gn/T/itunes__e9tjfzf.png
+2026-02-24 21:44:43,936 - pyrogram.connection.connection - INFO - Connecting...
+2026-02-24 21:44:43,983 - pyrogram.connection.connection - INFO - Connected! Production DC5 (media) - IPv4
+2026-02-24 21:44:43,983 - pyrogram.session.session - INFO - NetworkTask started
+2026-02-24 21:44:44,139 - pyrogram.session.session - INFO - Session initialized: Layer 220
+2026-02-24 21:44:44,139 - pyrogram.session.session - INFO - Device: CPython 3.14.2 - Pyrogram 2.3.69
+2026-02-24 21:44:44,139 - pyrogram.session.session - INFO - System: Darwin 24.3.0 (en)
+2026-02-24 21:44:44,139 - pyrogram.session.session - INFO - Session started
+2026-02-24 21:44:44,139 - pyrogram.session.session - INFO - PingTask started
+2026-02-24 21:44:44,239 - pyrogram.session.session - INFO - PingTask stopped
+2026-02-24 21:44:44,240 - pyrogram.session.session - INFO - NetworkTask stopped
+2026-02-24 21:44:44,240 - pyrogram.connection.connection - INFO - Disconnected
+2026-02-24 21:44:44,240 - pyrogram.session.session - INFO - Session stopped
+2026-02-24 21:44:44,246 - pyrogram.connection.connection - INFO - Connecting...
+2026-02-24 21:44:44,301 - pyrogram.connection.connection - INFO - Connected! Production DC5 (media) - IPv4
+2026-02-24 21:44:44,301 - pyrogram.session.session - INFO - NetworkTask started
+2026-02-24 21:44:44,488 - pyrogram.session.session - INFO - Session initialized: Layer 220
+2026-02-24 21:44:44,488 - pyrogram.session.session - INFO - Device: CPython 3.14.2 - Pyrogram 2.3.69
+2026-02-24 21:44:44,488 - pyrogram.session.session - INFO - System: Darwin 24.3.0 (en)
+2026-02-24 21:44:44,488 - pyrogram.session.session - INFO - Session started
+2026-02-24 21:44:44,490 - pyrogram.session.session - INFO - PingTask started
+2026-02-24 21:44:45,045 - pyrogram.session.session - INFO - PingTask stopped
+2026-02-24 21:44:45,046 - pyrogram.session.session - INFO - NetworkTask stopped
+2026-02-24 21:44:45,046 - pyrogram.connection.connection - INFO - Disconnected
+2026-02-24 21:44:45,046 - pyrogram.session.session - INFO - Session stopped
+2026-02-24 21:46:47,853 - pyrogram.connection.connection - INFO - Connecting...
+2026-02-24 21:46:47,908 - pyrogram.connection.connection - INFO - Connected! Production DC5 - IPv4
+2026-02-24 21:46:47,909 - pyrogram.session.session - INFO - NetworkTask started
+2026-02-24 21:46:48,087 - pyrogram.session.session - INFO - Session initialized: Layer 220
+2026-02-24 21:46:48,087 - pyrogram.session.session - INFO - Device: CPython 3.14.2 - Pyrogram 2.3.69
+2026-02-24 21:46:48,087 - pyrogram.session.session - INFO - System: Darwin 24.3.0 (en)
+2026-02-24 21:46:48,087 - pyrogram.session.session - INFO - Session started
+2026-02-24 21:46:48,089 - pyrogram.session.session - INFO - PingTask started
+2026-02-24 21:46:48,240 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("add_prefix") in group 0 from "plugins.prefix_and_suffix"
+2026-02-24 21:46:48,240 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("delete_prefix") in group 0 from "plugins.prefix_and_suffix"
+2026-02-24 21:46:48,240 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("see_prefix") in group 0 from "plugins.prefix_and_suffix"
+2026-02-24 21:46:48,240 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("add_suffix") in group 0 from "plugins.prefix_and_suffix"
+2026-02-24 21:46:48,240 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("delete_suffix") in group 0 from "plugins.prefix_and_suffix"
+2026-02-24 21:46:48,240 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("see_suffix") in group 0 from "plugins.prefix_and_suffix"
+2026-02-24 21:46:48,241 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("handle_metadata") in group 0 from "plugins.metadata"
+2026-02-24 21:46:48,241 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] CallbackQueryHandler("query_metadata") in group 0 from "plugins.metadata"
+2026-02-24 21:46:48,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("_") in group 0 from "plugins.__init__"
+2026-02-24 21:46:48,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("sticker_file_id_handler") in group 0 from "plugins.__init__"
+2026-02-24 21:46:48,242 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("forces_sub_handler") in group 0 from "plugins.__init__"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("get_stats") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("log_file") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("add_premium") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("remove_premium") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("approve_user") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("unapprove_user") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("pending_users") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] CallbackQueryHandler("cb_approve_pending") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] CallbackQueryHandler("cb_reject_pending") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("restart_bot") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("ban") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("deleteuser") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("unban") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("_banned_users") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,246 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("broadcast_handler") in group 0 from "plugins.admin_panel"
+2026-02-24 21:46:48,247 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("add_caption") in group 0 from "plugins.thumb_and_cap"
+2026-02-24 21:46:48,247 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("delete_caption") in group 0 from "plugins.thumb_and_cap"
+2026-02-24 21:46:48,247 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("see_caption") in group 0 from "plugins.thumb_and_cap"
+2026-02-24 21:46:48,247 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("viewthumb") in group 0 from "plugins.thumb_and_cap"
+2026-02-24 21:46:48,247 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("removethumb") in group 0 from "plugins.thumb_and_cap"
+2026-02-24 21:46:48,247 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("addthumbs") in group 0 from "plugins.thumb_and_cap"
+2026-02-24 21:46:48,251 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("start") in group 0 from "plugins.start_and_cb"
+2026-02-24 21:46:48,251 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("myplan") in group 0 from "plugins.start_and_cb"
+2026-02-24 21:46:48,251 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("plans") in group 0 from "plugins.start_and_cb"
+2026-02-24 21:46:48,251 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] CallbackQueryHandler("cb_handler") in group 0 from "plugins.start_and_cb"
+2026-02-24 21:46:48,251 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("rename_start") in group 0 from "plugins.file_rename"
+2026-02-24 21:46:48,251 - pyrogram.client - INFO - [DigitalRenameBot] [LOAD] MessageHandler("refunc") in group 0 from "plugins.file_rename"
+2026-02-24 21:46:48,251 - pyrogram.client - INFO - [DigitalRenameBot] Successfully loaded 38 plugins from "plugins"
+2026-02-24 21:46:48,251 - pyrogram.dispatcher - INFO - Started 200 HandlerTasks
+2026-02-24 21:46:51,867 - pyrogram.connection.connection - INFO - Connecting...
+2026-02-24 21:46:51,920 - pyrogram.connection.connection - INFO - Connected! Production DC5 (media) - IPv4
+2026-02-24 21:46:51,921 - pyrogram.session.session - INFO - NetworkTask started
+2026-02-24 21:46:52,100 - pyrogram.session.session - INFO - Session initialized: Layer 220
+2026-02-24 21:46:52,100 - pyrogram.session.session - INFO - Device: CPython 3.14.2 - Pyrogram 2.3.69
+2026-02-24 21:46:52,101 - pyrogram.session.session - INFO - System: Darwin 24.3.0 (en)
+2026-02-24 21:46:52,101 - pyrogram.session.session - INFO - Session started
+2026-02-24 21:46:52,103 - pyrogram.session.session - INFO - PingTask started
+2026-02-24 21:46:52,664 - pyrogram.session.session - INFO - PingTask stopped
+2026-02-24 21:46:52,664 - pyrogram.session.session - INFO - NetworkTask stopped
+2026-02-24 21:46:52,664 - pyrogram.connection.connection - INFO - Disconnected
+2026-02-24 21:46:52,664 - pyrogram.session.session - INFO - Session stopped
+2026-02-24 21:46:52,958 - plugins.file_rename - INFO - Đang giải nén file, tìm plist để đọc Bundle ID. user_id=5341455835 file=com.thanhdora.k.devil.hunter_1.0-4+debug_iphoneos-arm64.deb
+2026-02-24 21:46:53,019 - plugins.file_rename - INFO - Bundle ID từ file | user_id=5341455835 file=com.thanhdora.k.devil.hunter_1.0-4+debug_iphoneos-arm64.deb | bundle_id=com.codedragon.kdemon app= version=
+2026-02-24 21:46:53,019 - plugins.file_rename - INFO - Đang lấy ảnh từ iTunes, bundle_id=com.codedragon.kdemon
+2026-02-24 21:46:57,098 - plugins.file_rename - INFO - Ảnh iTunes đã lấy, sẽ gắn vào file khi upload. bundle_id=com.codedragon.kdemon path=/var/folders/qt/3qlb_6p518v1s1134320_rv80000gn/T/itunes_ta4d1_rs.png
+2026-02-24 21:47:03,151 - pyrogram.connection.connection - INFO - Connecting...
+2026-02-24 21:47:03,201 - pyrogram.connection.connection - INFO - Connected! Production DC5 (media) - IPv4
+2026-02-24 21:47:03,202 - pyrogram.session.session - INFO - NetworkTask started
+2026-02-24 21:47:03,371 - pyrogram.session.session - INFO - Session initialized: Layer 220
+2026-02-24 21:47:03,371 - pyrogram.session.session - INFO - Device: CPython 3.14.2 - Pyrogram 2.3.69
+2026-02-24 21:47:03,371 - pyrogram.session.session - INFO - System: Darwin 24.3.0 (en)
+2026-02-24 21:47:03,371 - pyrogram.session.session - INFO - Session started
+2026-02-24 21:47:03,372 - pyrogram.session.session - INFO - PingTask started
+2026-02-24 21:47:03,479 - pyrogram.session.session - INFO - PingTask stopped
+2026-02-24 21:47:03,479 - pyrogram.session.session - INFO - NetworkTask stopped
+2026-02-24 21:47:03,479 - pyrogram.connection.connection - INFO - Disconnected
+2026-02-24 21:47:03,479 - pyrogram.session.session - INFO - Session stopped
+2026-02-24 21:47:03,484 - pyrogram.connection.connection - INFO - Connecting...
+2026-02-24 21:47:03,530 - pyrogram.connection.connection - INFO - Connected! Production DC5 (media) - IPv4
+2026-02-24 21:47:03,531 - pyrogram.session.session - INFO - NetworkTask started
+2026-02-24 21:47:03,802 - pyrogram.session.session - INFO - Session initialized: Layer 220
+2026-02-24 21:47:03,803 - pyrogram.session.session - INFO - Device: CPython 3.14.2 - Pyrogram 2.3.69
+2026-02-24 21:47:03,803 - pyrogram.session.session - INFO - System: Darwin 24.3.0 (en)
+2026-02-24 21:47:03,803 - pyrogram.session.session - INFO - Session started
+2026-02-24 21:47:03,805 - pyrogram.session.session - INFO - PingTask started
+2026-02-24 21:47:04,304 - pyrogram.session.session - INFO - PingTask stopped
+2026-02-24 21:47:04,304 - pyrogram.session.session - INFO - NetworkTask stopped
+2026-02-24 21:47:04,305 - pyrogram.connection.connection - INFO - Disconnected
+2026-02-24 21:47:04,305 - pyrogram.session.session - INFO - Session stopped

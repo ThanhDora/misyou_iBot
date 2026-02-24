@@ -1,4 +1,4 @@
-# ThanhDora | Doratem | https://github.com/ThanhDora | @DoraTeamMods
+# ThanhDora | DoraTeam | https://github.com/ThanhDora | @DoraTeamMods
 """
 Apache License 2.0
 """
@@ -12,7 +12,7 @@ __library__ = "<a href=https://github.com/pyrogram>Pyʀᴏɢʀᴀᴍ</a>"
 __language__ = "<a href=https://www.python.org/>Pyᴛʜᴏɴ 3</a>"
 __database__ = "<a href=https://cloud.mongodb.com/>Mᴏɴɢᴏ DB</a>"
 __developer__ = "<a href=https://t.me/DoraTeamMods>@DoraTeamMods</a>"
-__maindeveloper__ = "<a href=https://github.com/ThanhDora>ThanhDora / Doratem</a>"
+__maindeveloper__ = "<a href=https://github.com/ThanhDora>ThanhDora / DoraTeam</a>"
 
 # main copyright herders (©️)
 # I have been working on this repo since 2022
