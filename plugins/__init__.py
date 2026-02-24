@@ -61,7 +61,7 @@ async def _(bot, message):
         if message.text and message.text.strip().lower().startswith("/start"):
             await send_pending_approval_notification(bot, message.from_user)
         return await message.reply_text(
-            "⏳ **Bạn chưa được duyệt.**\n\nAdmin cần duyệt tài khoản trước khi bạn dùng bot.\nVui lòng đợi hoặc liên hệ admin."
+            "⏳ **Bạn chưa được duyệt.**\n\nAdmin cần duyệt tài khoản trước khi bạn dùng bot.\nVui lòng đợi hoặc liên hệ admin. @ThanhDora"
         )
     await handle_banned_user_status(bot, message)
 
