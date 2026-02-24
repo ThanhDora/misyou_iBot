@@ -542,7 +542,14 @@ def _make_document_thumb(ph_path):
         return None
     try:
         img = Image.open(ph_path).convert("RGB")
-        img.thumbnail((320, 320), getattr(Image, "LANCZOS", Image.BICUBIC))
+        w, h = img.size
+        if w != h:
+            side = min(w, h)
+            left = (w - side) // 2
+            top = (h - side) // 2
+            img = img.crop((left, top, left + side, top + side))
+        resample = getattr(Image, "LANCZOS", Image.BICUBIC)
+        img = img.resize((320, 320), resample)
         fd, jpg_path = tempfile.mkstemp(suffix=".jpg", prefix="thumb_")
         os.close(fd)
         for q in [85, 70, 55, 40, 30, 20]:
