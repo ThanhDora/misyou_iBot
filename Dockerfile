@@ -1,7 +1,6 @@
-# Use the official Python image
-FROM python:3.9-slim-buster
+FROM python:3.9-slim-bookworm
 
-RUN apt-get update -qq && apt-get -y install ffmpeg
+RUN apt-get update -qq && apt-get -y install --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory in the container
 WORKDIR /app
