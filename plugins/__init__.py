@@ -44,8 +44,6 @@ from plugins.force_sub import not_subscribed, forces_sub, handle_banned_user_sta
 from pyrogram import Client, filters
 from config import Config
 from helper.database import digital_botz
-from helper.utils import send_pending_approval_notification
-
 async def require_approved(_, client, update):
     if not getattr(Config, "APPROVAL_REQUIRED", False):
         return True
@@ -58,8 +56,6 @@ async def require_approved(_, client, update):
 async def _(bot, message):
     await digital_botz.add_user(bot, message)
     if Config.APPROVAL_REQUIRED and not await digital_botz.is_approved(message.from_user.id):
-        if message.text and message.text.strip().lower().startswith("/start"):
-            await send_pending_approval_notification(bot, message.from_user)
         return await message.reply_text(
             "⏳ **Bạn chưa được duyệt.**\n\nAdmin cần duyệt tài khoản trước khi bạn dùng bot.\nVui lòng đợi hoặc liên hệ admin. @ThanhDora"
         )

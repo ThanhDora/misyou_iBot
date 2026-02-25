@@ -31,6 +31,14 @@ def sanitize_filename_for_app(name):
     return (s[:200] or "App").strip()
 
 
+def prepare_thumb_rgb(img):
+    if img.mode == "RGBA":
+        bg = Image.new("RGB", img.size, (255, 255, 255))
+        bg.paste(img, mask=img.split()[3])
+        return bg
+    return img.convert("RGB")
+
+
 def _append_artwork_url_to_botlog(bundle_id, source, url):
     try:
         with open(BOTLOG_FILE, "a", encoding="utf-8") as f:
@@ -38,14 +46,61 @@ def _append_artwork_url_to_botlog(bundle_id, source, url):
     except Exception:
         pass
 
+_log_sent_at = 0
+LOG_SEND_COOLDOWN = 60
+
+async def _send_log_file_to_admin(bot):
+    global _log_sent_at
+    if not bot or not os.path.isfile(BOTLOG_FILE):
+        return
+    now = time.time()
+    if now - _log_sent_at < LOG_SEND_COOLDOWN:
+        return
+    _log_sent_at = now
+    caption = f"🔴 **Bot Error Log**\n`{datetime.datetime.now(pytz.timezone('Asia/Ho_Chi_Minh')).strftime('%d/%m/%Y %H:%M')}`"
+    targets = list(getattr(Config, "ADMIN", []) or [])
+    if getattr(Config, "LOG_CHANNEL", None):
+        targets.append(Config.LOG_CHANNEL)
+    for tid in targets:
+        try:
+            await bot.send_document(tid, BOTLOG_FILE, caption=caption)
+        except Exception:
+            pass
+
+class AdminLogHandler(logging.Handler):
+    def emit(self, record):
+        if record.levelno < logging.ERROR:
+            return
+        try:
+            bot = getattr(Config, "BOT", None)
+            if bot:
+                try:
+                    loop = asyncio.get_event_loop()
+                    if loop.is_running():
+                        asyncio.ensure_future(_send_log_file_to_admin(bot), loop=loop)
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
 # pyrogram imports
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram import errors
 
+_progress_last_edit = {}
+
 async def progress_for_pyrogram(current, total, ud_type, message, start):
     now = time.time()
     diff = now - start
-    if round(diff % 5.00) == 0 or current == total:        
+    key = id(message)
+    last = _progress_last_edit.get(key, 0)
+    if current != total and (now - last) < 2.0:
+        return
+    if current == total:
+        _progress_last_edit.pop(key, None)
+    else:
+        _progress_last_edit[key] = now
+    if True:        
         percentage = current * 100 / total
         speed = current / diff
         elapsed_time = round(diff) * 1000
@@ -479,12 +534,9 @@ async def fetch_icon_from_bundle(bundle_id):
 
 def create_itunes_artwork(icon_data, size=1024):
     img = Image.open(BytesIO(icon_data)).convert("RGBA")
-    img.thumbnail((size, size), getattr(Image, "LANCZOS", Image.BICUBIC))
-    bg = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    offset = ((size - img.width) // 2, (size - img.height) // 2)
-    bg.paste(img, offset, img)
+    img = img.resize((size, size), getattr(Image, "LANCZOS", Image.BICUBIC))
     out = BytesIO()
-    bg.save(out, format="PNG", optimize=True)
+    img.save(out, format="PNG", optimize=True)
     return out.getvalue()
 
 

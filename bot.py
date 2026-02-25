@@ -20,6 +20,7 @@ from pyrogram import idle
 from config import Config
 from plugins.web_support import web_server
 from plugins.file_rename import app
+from helper.utils import AdminLogHandler
 
 # Get logging configurations
 logging.basicConfig(
@@ -53,7 +54,10 @@ class DigitalRenameBot(Client):
         self.premium = Config.PREMIUM_MODE
         self.uploadlimit = Config.UPLOAD_LIMIT_MODE
         Config.BOT = self
-        
+        admin_handler = AdminLogHandler()
+        admin_handler.setLevel(logging.ERROR)
+        logging.getLogger().addHandler(admin_handler)
+
         app = aiohttp.web.AppRunner(await web_server())
         await app.setup()
         bind_address = "0.0.0.0"

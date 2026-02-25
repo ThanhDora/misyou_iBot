@@ -16,7 +16,7 @@ from hachoir.parser import createParser
 from PIL import Image
 
 # bots imports
-from helper.utils import progress_for_pyrogram, convert, humanbytes, add_prefix_suffix, remove_path, fetch_itunes_artwork, fetch_itunes_artwork_and_inject_ipa, get_bundle_id_from_file, fetch_itunes_track_name, fetch_itunes_version, sanitize_filename_for_app
+from helper.utils import progress_for_pyrogram, convert, humanbytes, add_prefix_suffix, remove_path, fetch_itunes_artwork, fetch_itunes_artwork_and_inject_ipa, get_bundle_id_from_file, fetch_itunes_track_name, fetch_itunes_version, sanitize_filename_for_app, prepare_thumb_rgb
 from helper.database import digital_botz
 from helper.ffmpeg import change_metadata
 from config import Config
@@ -249,19 +249,6 @@ async def process_upload(bot, chat_id, file_message, upload_type, new_filename):
     loading_media_ref = [None]
     stop_sticker_rot = None
     sticker_rot_task = None
-    if sticker_ids:
-        try:
-            loading_media_ref[0] = await bot.send_sticker(chat_id, sticker_ids[0], reply_to_message_id=rkn_processing.id)
-            if len(sticker_ids) > 1:
-                stop_sticker_rot = asyncio.Event()
-                sticker_rot_task = asyncio.create_task(_rotate_stickers(bot, chat_id, rkn_processing.id, sticker_ids, loading_media_ref, stop_sticker_rot))
-        except Exception:
-            pass
-    elif _gif_path:
-        try:
-            loading_media_ref[0] = await bot.send_animation(chat_id, _gif_path, reply_to_message_id=rkn_processing.id)
-        except Exception:
-            pass
     if not os.path.isdir("Metadata"):
         os.mkdir("Metadata")
     if not new_filename:
@@ -276,6 +263,7 @@ async def process_upload(bot, chat_id, file_message, upload_type, new_filename):
                 await loading_media_ref[0].delete()
             except Exception:
                 pass
+        _botlog.error("Không lấy được tên file")
         return await rkn_processing.edit(f"{Config.E_ERROR} Không lấy được tên file.", parse_mode=ParseMode.HTML)
     user_data = await digital_botz.get_user_data(user_id)
     try:
@@ -294,13 +282,12 @@ async def process_upload(bot, chat_id, file_message, upload_type, new_filename):
                 await loading_media_ref[0].delete()
             except Exception:
                 pass
+        _botlog.error("Prefix/Suffix Error: %s", e, exc_info=True)
         return await rkn_processing.edit(f"{Config.E_ERROR} Something went wrong can't able to set Prefix or Suffix\n\nContact -> @DoraTeamMods\nError: {e}", parse_mode=ParseMode.HTML)
     media = getattr(file_message, file_message.media.value)
     file_path = f"Renames/{new_filename}"
     metadata_path = f"Metadata/{new_filename}"
     used = user_data.get('used_limit', 0)
-    stop_dl_anim = asyncio.Event()
-    dl_anim_task = asyncio.create_task(_animate_download_loading(rkn_processing, stop_dl_anim))
     if bot.premium and bot.uploadlimit:
         limit = user_data.get('uploadlimit', 0)
         total_used = int(used) + int(media.file_size)
@@ -311,15 +298,6 @@ async def process_upload(bot, chat_id, file_message, upload_type, new_filename):
         if bot.premium and bot.uploadlimit:
             used_remove = int(used) - int(media.file_size)
             await digital_botz.set_used_limit(user_id, used_remove)
-        stop_dl_anim.set()
-        try:
-            await asyncio.wait_for(dl_anim_task, timeout=2)
-        except (asyncio.TimeoutError, asyncio.CancelledError):
-            dl_anim_task.cancel()
-            try:
-                await dl_anim_task
-            except asyncio.CancelledError:
-                pass
         if sticker_rot_task:
             stop_sticker_rot.set()
             try:
@@ -331,17 +309,8 @@ async def process_upload(bot, chat_id, file_message, upload_type, new_filename):
                 await loading_media_ref[0].delete()
             except Exception:
                 pass
+        _botlog.error("Download Error: %s", e, exc_info=True)
         return await rkn_processing.edit(f"{Config.E_ERROR} Download Error: {e}", parse_mode=ParseMode.HTML)
-    finally:
-        stop_dl_anim.set()
-        try:
-            await asyncio.wait_for(dl_anim_task, timeout=2)
-        except (asyncio.TimeoutError, asyncio.CancelledError):
-            dl_anim_task.cancel()
-            try:
-                await dl_anim_task
-            except asyncio.CancelledError:
-                pass
     await rkn_processing.edit(_running_msg_auto(RUNNING_HEADER_ICON, f"{ICON_DONE} Download complete.", f"{ICON_INFO} Processing..."), parse_mode=ParseMode.HTML)
     metadata_mode = await digital_botz.get_metadata_mode(user_id)
     if metadata_mode:
@@ -422,7 +391,8 @@ async def process_upload(bot, chat_id, file_message, upload_type, new_filename):
                     pass
         if ph_path:
             try:
-                img = Image.open(ph_path).convert("RGB")
+                img = Image.open(ph_path)
+                img = prepare_thumb_rgb(img)
                 img = img.resize((320, 320), getattr(Image, "LANCZOS", Image.BICUBIC))
                 for q in [85, 70, 55, 40, 30, 20]:
                     img.save(ph_path, "JPEG", quality=q, optimize=True)
@@ -441,7 +411,8 @@ async def process_upload(bot, chat_id, file_message, upload_type, new_filename):
             ph_path = None
     if ph_path and os.path.exists(ph_path):
         try:
-            img = Image.open(ph_path).convert("RGB")
+            img = Image.open(ph_path)
+            img = prepare_thumb_rgb(img)
             img = img.resize((320, 320), Image.LANCZOS)
             for q in [85, 70, 55, 40, 30, 20]:
                 img.save(ph_path, "JPEG", quality=q, optimize=True)
@@ -494,6 +465,7 @@ async def process_upload(bot, chat_id, file_message, upload_type, new_filename):
                     await loading_media_ref[0].delete()
                 except Exception:
                     pass
+            _botlog.error("Upload Error: %s", error)
             return await rkn_processing.edit(f"{Config.E_ERROR} Upload Error: {error}", parse_mode=ParseMode.HTML)
         if Config.LOG_CHANNEL:
             from_chat = filw.chat.id
@@ -519,6 +491,7 @@ async def process_upload(bot, chat_id, file_message, upload_type, new_filename):
                     await loading_media_ref[0].delete()
                 except Exception:
                     pass
+            _botlog.error("Upload Error: %s", error)
             return await rkn_processing.edit(f"{Config.E_ERROR} Upload Error: {error}", parse_mode=ParseMode.HTML)
     await remove_path(ph_path, file_path, dl_path, metadata_path, modified_ipa_path, itunes_upload_path)
     if sticker_rot_task:
@@ -541,7 +514,8 @@ def _make_document_thumb(ph_path):
     if not ph_path or not os.path.exists(ph_path):
         return None
     try:
-        img = Image.open(ph_path).convert("RGB")
+        img = Image.open(ph_path)
+        img = prepare_thumb_rgb(img)
         w, h = img.size
         if w != h:
             side = min(w, h)
@@ -623,6 +597,7 @@ async def upload_doc(bot, update):
     new_name = update.message.text
     new_filename_ = new_name.split(":-")[1].strip().strip("*`\n\t ").strip() if ":-" in (new_name or "") else ""
     if not new_filename_:
+        _botlog.error("Không lấy được tên file")
         return await rkn_processing.edit(f"{Config.E_ERROR} Không lấy được tên file.", parse_mode=ParseMode.HTML)
     user_data = await digital_botz.get_user_data(user_id)
     try:
@@ -630,6 +605,7 @@ async def upload_doc(bot, update):
         suffix = user_data.get('suffix', None)
         new_filename = await add_prefix_suffix(new_filename_, prefix, suffix)
     except Exception as e:
+        _botlog.error("Prefix/Suffix Error: %s", e, exc_info=True)
         return await rkn_processing.edit(f"{Config.E_ERROR} Something went wrong can't able to set Prefix or Suffix\n\nContact -> @DoraTeamMods\nError: {e}", parse_mode=ParseMode.HTML)
 
     # msg file location 
@@ -640,8 +616,6 @@ async def upload_doc(bot, update):
     file_path = f"Renames/{new_filename}"
     metadata_path = f"Metadata/{new_filename}"
 
-    stop_dl_anim = asyncio.Event()
-    dl_anim_task = asyncio.create_task(_animate_download_loading(rkn_processing, stop_dl_anim))
     if bot.premium and bot.uploadlimit:
         limit = user_data.get('uploadlimit', 0)
         used = user_data.get('used_limit', 0)
@@ -653,26 +627,8 @@ async def upload_doc(bot, update):
         if bot.premium and bot.uploadlimit:
             used_remove = int(used) - int(media.file_size)
             await digital_botz.set_used_limit(user_id, used_remove)
-        stop_dl_anim.set()
-        try:
-            await asyncio.wait_for(dl_anim_task, timeout=2)
-        except (asyncio.TimeoutError, asyncio.CancelledError):
-            dl_anim_task.cancel()
-            try:
-                await dl_anim_task
-            except asyncio.CancelledError:
-                pass
+        _botlog.error("Download Error: %s", e, exc_info=True)
         return await rkn_processing.edit(f"{Config.E_ERROR} Download Error: {e}", parse_mode=ParseMode.HTML)
-    finally:
-        stop_dl_anim.set()
-        try:
-            await asyncio.wait_for(dl_anim_task, timeout=2)
-        except (asyncio.TimeoutError, asyncio.CancelledError):
-            dl_anim_task.cancel()
-            try:
-                await dl_anim_task
-            except asyncio.CancelledError:
-                pass
 
     await rkn_processing.edit(_running_msg_auto(RUNNING_HEADER_ICON, f"{ICON_DONE} Download complete.", f"{ICON_INFO} Processing..."), parse_mode=ParseMode.HTML)
     metadata_mode = await digital_botz.get_metadata_mode(user_id)
@@ -766,7 +722,8 @@ async def upload_doc(bot, update):
                     pass
         if ph_path:
             try:
-                img = Image.open(ph_path).convert("RGB")
+                img = Image.open(ph_path)
+                img = prepare_thumb_rgb(img)
                 img = img.resize((320, 320), getattr(Image, "LANCZOS", Image.BICUBIC))
                 for q in [85, 70, 55, 40, 30, 20]:
                     img.save(ph_path, "JPEG", quality=q, optimize=True)
@@ -787,7 +744,8 @@ async def upload_doc(bot, update):
 
     if ph_path and os.path.exists(ph_path):
         try:
-            img = Image.open(ph_path).convert("RGB")
+            img = Image.open(ph_path)
+            img = prepare_thumb_rgb(img)
             img = img.resize((320, 320), Image.LANCZOS)
             for q in [85, 70, 55, 40, 30, 20]:
                 img.save(ph_path, "JPEG", quality=q, optimize=True)
@@ -835,6 +793,7 @@ async def upload_doc(bot, update):
                 used_remove = int(used) - int(media.file_size)
                 await digital_botz.set_used_limit(user_id, used_remove)
             await remove_path(ph_path, file_path, dl_path, metadata_path, modified_ipa_path, itunes_upload_path)
+            _botlog.error("Upload Error: %s", error)
             return await rkn_processing.edit(f"{Config.E_ERROR} Upload Error: {error}", parse_mode=ParseMode.HTML)
         if Config.LOG_CHANNEL:
             from_chat = filw.chat.id
@@ -856,6 +815,7 @@ async def upload_doc(bot, update):
                 used_remove = int(used) - int(media.file_size)
                 await digital_botz.set_used_limit(user_id, used_remove)
             await remove_path(ph_path, file_path, dl_path, metadata_path, modified_ipa_path, itunes_upload_path)
+            _botlog.error("Upload Error: %s", error)
             return await rkn_processing.edit(f"{Config.E_ERROR} Upload Error: {error}", parse_mode=ParseMode.HTML)
 
     await remove_path(ph_path, file_path, dl_path, metadata_path, modified_ipa_path, itunes_upload_path)
