@@ -126,7 +126,11 @@ Tʜɪs Bᴏᴛ Wᴀs Cʀᴇᴀᴛᴇᴅ Bʏ : ThanhDora | @DoraTeamMods 💞</b>
 <b>•></b> /start Tʜᴇ Bᴏᴛ.
 
 ✏️ <b><u>Hᴏᴡ Tᴏ Rᴇɴᴀᴍᴇ A Fɪʟᴇ</u></b>
-<b>•></b> Sᴇɴᴅ Aɴy Fɪʟᴇ Aɴᴅ Tyᴩᴇ Nᴇᴡ Fɪʟᴇ Nɴᴀᴍᴇ \nAɴᴅ Aᴇʟᴇᴄᴛ Tʜᴇ Fᴏʀᴍᴀᴛ [ document, video, audio ].           
+<b>•></b> Sᴇɴᴅ Aɴy Fɪʟᴇ Aɴᴅ Tyᴩᴇ Nᴇᴡ Fɪʟᴇ Nɴᴀᴍᴇ \nAɴᴅ Aᴇʟᴇᴄᴛ Tʜᴇ Fᴏʀᴍᴀᴛ [ document, video, audio ].
+
+🛠️ <b><u>IL2CPP Dᴜᴍᴘ</u></b>
+<b>•></b> /dump - Dᴜᴍᴘ Uɴɪᴛʏ IL2CPP ʙɪɴᴀʀɪᴇs. Gᴜɪ̇ʀɪ 2 ғɪʟᴇ: ᴇxᴇᴄᴜᴛᴀʙʟᴇ + global-metadata.dat
+
 ℹ️ 𝗔𝗻𝘆 𝗢𝘁𝗵𝗲𝗿 𝗛𝗲𝗹𝗽 𝗖𝗼𝗻𝘁𝗮𝗰𝘁 :- <a href=https://t.me/DoraTeamMods>@DoraTeamMods</a>
 """
 
