@@ -11,3 +11,6 @@ Renames
 Metadata
 *.log
 *.session*
+
+dumper/Il2CppDumper-net6
+dumper/Il2CppDumper-mac
