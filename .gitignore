@@ -1,0 +1,30 @@
+# Secrets (.env is still tracked for now; see the cleanup PR notes)
+.env.*
+!.env.example
+
+# Telegram/Pyrogram sessions
+*.session
+*.session-journal
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Runtime output
+BotLog.txt
+*.log
+Renames/*
+!Renames/.gitkeep
+Metadata/
+*.temp
+
+# Il2CppDumper binaries (downloaded at build time, see Dockerfile)
+dumper/Il2CppDumper-net6/
+dumper/Il2CppDumper-mac
+dumper/Il2CppDumper
+dumper/Il2CppDumper.exe
+
+# OS
+.DS_Store
