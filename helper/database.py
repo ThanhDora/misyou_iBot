@@ -263,6 +263,13 @@ class Database:
         all_premium_users = self.premium.find({"expiry_time": {"$gt": datetime.datetime.now()}})
         return all_premium_users
 
+    async def count_users_by(self, query):
+        return await self.col.count_documents(query or {})
+
+    async def list_users_page(self, query, skip=0, limit=6):
+        cursor = self.col.find(query or {}).sort([("join_date", 1), ("_id", 1)]).skip(int(skip)).limit(int(limit))
+        return await cursor.to_list(length=int(limit))
+
     async def get_free_trial_status(self, user_id):
         user_data = await self.get_user(user_id)
         if user_data:

@@ -16,6 +16,8 @@ from config import Config, rkn
 from helper.utils import humanbytes
 from plugins import __version__ as _bot_version_, __developer__, __database__, __library__, __language__, __programer__, require_approved
 from plugins.file_rename import upload_doc
+from helper.menu_ui import help_text as menu_help_text, markup as menu_markup, btn as menu_btn
+from plugins.menu import show_home
 
 def _upgrade_markup(with_trial=False):
     rows = [[InlineKeyboardButton('buy premium ✓', url=Config.PREMIUM_LINK)]]
@@ -31,23 +33,8 @@ upgrade_trial_button = _upgrade_markup(True)
         
 @Client.on_message(filters.private & filters.command("start") & filters.create(require_approved))
 async def start(client, message):
-    start_button = [[        
-        InlineKeyboardButton('Uᴩᴅᴀ𝚃ᴇꜱ', url='https://t.me/DoraTeamMods'),
-        InlineKeyboardButton('Sᴜᴩᴩᴏʀ𝚃', url='https://t.me/DoraTeamMods')
-        ],[
-        InlineKeyboardButton('Aʙᴏυᴛ', callback_data='about'),
-        InlineKeyboardButton('Hᴇʟᴩ', callback_data='help')       
-         ]]
-        
-    if client.premium:
-        start_button.append([InlineKeyboardButton('💸 ᴜᴘɢʀᴀᴅᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ 💸', callback_data='upgrade')])
-            
-    user = message.from_user
-    await digital_botz.add_user(client, message) 
-    if Config.RKN_PIC:
-        await message.reply_photo(Config.RKN_PIC, caption=rkn.START_TXT.format(user.mention), reply_markup=InlineKeyboardMarkup(start_button))    
-    else:
-        await message.reply_text(text=rkn.START_TXT.format(user.mention), reply_markup=InlineKeyboardMarkup(start_button), disable_web_page_preview=True)
+    await digital_botz.add_user(client, message)
+    await show_home(client, message)
 
 
 @Client.on_message(filters.private & filters.command("myplan") & filters.create(require_approved))
@@ -157,39 +144,15 @@ async def cb_handler(client, query: CallbackQuery):
                 pass
         return
     if data == "start":
-        start_button = [[        
-        InlineKeyboardButton('Uᴩᴅᴀ𝚃ᴇꜱ', url='https://t.me/DoraTeamMods'),
-        InlineKeyboardButton('Sᴜᴩᴩᴏʀ𝚃', url='https://t.me/DoraTeamMods')
-        ],[
-        InlineKeyboardButton('Aʙᴏυᴛ', callback_data='about'),
-        InlineKeyboardButton('Hᴇʟᴩ', callback_data='help')       
-         ]]
-            
-        if client.premium:
-            start_button.append([InlineKeyboardButton('💸 ᴜᴘɢʀᴀᴅᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ 💸', callback_data='upgrade')])
-            
-        await query.message.edit_text(
-            text=rkn.START_TXT.format(query.from_user.mention),
-            disable_web_page_preview=True,
-            reply_markup = InlineKeyboardMarkup(start_button))
-        
+        await show_home(client, query)
+        return
+
     elif data == "help":
         await query.message.edit_text(
-            text=rkn.HELP_TXT,
+            text=menu_help_text(),
             disable_web_page_preview=True,
-            reply_markup=InlineKeyboardMarkup([[
-                #⚠️ don't change source code & source link ⚠️ #
-                InlineKeyboardButton("ᴛʜᴜᴍʙɴᴀɪʟ", callback_data = "thumbnail"),
-                InlineKeyboardButton("ᴄᴀᴘᴛɪᴏɴ", callback_data = "caption")
-                ],[          
-                InlineKeyboardButton("ᴄᴜsᴛᴏᴍ ғɪʟᴇ ɴᴀᴍᴇ", callback_data = "custom_file_name")    
-                ],[          
-                InlineKeyboardButton("ᴀʙᴏᴜᴛ", callback_data = "about"),
-                InlineKeyboardButton("ᴍᴇᴛᴀᴅᴀᴛᴀ", callback_data = "digital_meta_data")
-                                     ],[
-                InlineKeyboardButton("Bᴀᴄᴋ", callback_data = "start")
-                  ]]))         
-        
+            reply_markup=menu_markup([[menu_btn("Quay lai", "m:home")]]))
+
     elif data == "about":
         about_button = [[
          #⚠️ don't change source code & source link ⚠️ #

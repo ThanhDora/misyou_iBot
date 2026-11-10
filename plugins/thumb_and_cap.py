@@ -58,6 +58,10 @@ async def removethumb(client, message):
 
 @Client.on_message(filters.private & filters.photo & filters.create(require_approved))
 async def addthumbs(client, message):
+    from helper.menu_ui import get_pending
+    pending = get_pending(message.from_user.id)
+    if pending and pending.get("action") != "set_thumb":
+        return
     rkn = await message.reply_text("__**ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ**__")
     await digital_botz.set_thumbnail(message.from_user.id, file_id=message.photo.file_id)                
     await rkn.edit("✅️ __**Tʜᴜᴍʙɴᴀɪʟ Sᴀᴠᴇᴅ**__")

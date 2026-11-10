@@ -15,6 +15,7 @@ from pathlib import Path
 from pyrogram import Client, __version__, errors
 from pyrogram.raw.all import layer
 from pyrogram import idle
+from pyrogram.types import BotCommand
 
 # bots imports
 from config import Config
@@ -77,6 +78,11 @@ class DigitalRenameBot(Client):
                 sys.modules["plugins" + plugin_name] = load
                 print("Digital Botz Imported " + plugin_name)
                 
+        try:
+            await self.set_bot_commands([BotCommand("start", "Mo menu")])
+        except Exception:
+            pass
+
         print(f"{me.first_name} Iꜱ Sᴛᴀʀᴛᴇᴅ.....✨️")
 
         

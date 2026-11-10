@@ -103,14 +103,15 @@ class Config(object):
 
 class rkn(object):
     # part of text configuration
-    START_TXT = """<b>Ｈ𝙰𝙸, {}👋
+    START_TXT = """<b>Xin chao, {}
 
-𝚃ʜɪs 𝙸s 𝙰ɴ 𝙰ᴅᴠᴀᴄᴇᴅ 𝙰ɴᴅ 𝚈ᴇᴛ 𝙿ᴏᴡᴇʀғᴜʟ 𝚁ᴇɴᴀᴍᴇ 𝙱ᴏᴛ
-𝚄sɪɴɢ 𝚃ʜɪs 𝙱ᴏᴛ 𝚈ᴏᴜ 𝙲ᴀɴ 𝚁ᴇɴᴀᴍᴇ & 𝙲ʜᴀɴɢᴇ 𝚃ʜᴜᴍʙɴᴀɪʟ 𝙾ғ 𝚈ᴏᴜʀ 𝙵ɪʟᴇ 
-𝚈ᴏᴜ 𝙲ᴀɴ 𝙰ʟsᴏ 𝙲ᴏɴᴠᴇʀᴛ 𝚅ɪᴅᴇᴏ 𝚃ᴏ 𝙵ɪʟᴇ & 𝙵ɪʟᴇ 𝚃ᴏ 𝚅ɪᴅᴇᴏ
-𝚃𝙷𝙸𝚂 𝙱𝙾𝚃 𝙰𝙻𝚂𝙾 𝚂𝚄𝙿𝙿𝙾𝚁𝚃𝚂 𝙲𝚄𝚂𝚃𝙾𝙼 𝚃𝙷𝚄𝙼𝙱𝙽𝙰𝙸𝙻 𝙰𝙽𝙳 𝙲𝚄𝚂𝚃𝙾𝙼 𝙲𝙰𝙿𝚃𝙸𝙾𝙽
+Day la bot doi ten file, anh bia va chu thich.
 
-Tʜɪs Bᴏᴛ Wᴀs Cʀᴇᴀᴛᴇᴅ Bʏ : ThanhDora | @DoraTeamMods 💞</b>"""
+Cach dung:
+- Gui file de doi ten
+- Dung cac nut ben duoi de cai dat
+
+Ho tro: @DoraTeamMods</b>"""
 
     ABOUT_TXT = """<b>╭───────────⍟
 ├🤖 ᴍy ɴᴀᴍᴇ : {}
@@ -123,12 +124,15 @@ Tʜɪs Bᴏᴛ Wᴀs Cʀᴇᴀᴛᴇᴅ Bʏ : ThanhDora | @DoraTeamMods 💞</b>
 ╰───────────────⍟ """
 
     HELP_TXT = """
-<b>•></b> /start Tʜᴇ Bᴏᴛ.
+<b>Huong dan</b>
 
-✏️ <b><u>Hᴏᴡ Tᴏ Rᴇɴᴀᴍᴇ A Fɪʟᴇ</u></b>
-<b>•></b> Sᴇɴᴅ Aɴy Fɪʟᴇ Aɴᴅ Tyᴩᴇ Nᴇᴡ Fɪʟᴇ Nɴᴀᴍᴇ \nAɴᴅ Aᴇʟᴇᴄᴛ Tʜᴇ Fᴏʀᴍᴀᴛ [ document, video, audio ].
+<b>Doi ten file</b>
+Gui file, roi nhap ten moi theo huong dan cua bot.
 
-ℹ️ 𝗔𝗻𝘆 𝗢𝘁𝗵𝗲𝗿 𝗛𝗲𝗹𝗽 𝗖𝗼𝗻𝘁𝗮𝗰𝘁 :- <a href=https://t.me/DoraTeamMods>@DoraTeamMods</a>
+<b>Cai dat</b>
+Dung cac nut trong menu: Anh bia, Chu thich, Tien to / Hau to, Metadata, Goi cua toi.
+
+Ho tro: <a href=https://t.me/DoraTeamMods>@DoraTeamMods</a>
 """
 
     UPGRADE_PREMIUM= """
@@ -158,22 +162,14 @@ Tʜɪs Bᴏᴛ Wᴀs Cʀᴇᴀᴛᴇᴅ Bʏ : ThanhDora | @DoraTeamMods 💞</b>
     """
     
     THUMBNAIL = """
-🌌 <b><u>Hᴏᴡ Tᴏ Sᴇᴛ Tʜᴜᴍʙɴɪʟᴇ</u></b>
+<b>Anh bia</b>
 
-<b>•></b> Sᴇɴᴅ Aɴy Pʜᴏᴛᴏ Tᴏ Aᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟy Sᴇᴛ Tʜᴜᴍʙɴɪʟᴇ.
-<b>•></b> /del_thumb Uꜱᴇ Tʜɪꜱ Cᴏᴍᴍᴀɴᴅ Tᴏ Dᴇʟᴇᴛᴇ Yᴏᴜʀ Oʟᴅ Tʜᴜᴍʙɴɪʟᴇ.
-<b>•></b> /view_thumb Uꜱᴇ Tʜɪꜱ Cᴏᴍᴍᴀɴᴅ Tᴏ Vɪᴇᴡ Yᴏᴜʀ Cᴜʀʀᴇɴᴛ Tʜᴜᴍʙɴɪʟᴇ.
+Mo menu Anh bia de xem, dat hoac xoa. Ban cung co the gui mot anh bat ky de dat anh bia.
 """
     CAPTION= """
-📑 <b><u>Hᴏᴡ Tᴏ Sᴇᴛ Cᴜꜱᴛᴏᴍ Cᴀᴩᴛɪᴏɴ</u></b>
+<b>Chu thich</b>
 
-<b>•></b> /set_caption - Uꜱᴇ Tʜɪꜱ Cᴏᴍᴍᴀɴᴅ Tᴏ Sᴇᴛ ᴀ Cᴜꜱᴛᴏᴍ Cᴀᴩᴛɪᴏɴ
-<b>•></b> /see_caption - Uꜱᴇ Tʜɪꜱ Cᴏᴍᴍᴀɴᴅ Tᴏ Vɪᴇᴡ Yᴏᴜʀ Cᴜꜱᴛᴏᴍ Cᴀᴩᴛɪᴏɴ
-<b>•></b> /del_caption - Uꜱᴇ Tʜɪꜱ Cᴏᴍᴍᴀɴᴅ Tᴏ Dᴇʟᴇᴛᴇ Yᴏᴜʀ Cᴜꜱᴛᴏᴍ Cᴀᴩᴛɪᴏɴ
-
-Exᴀᴍᴩʟᴇ:- `/set_caption 📕 Fɪʟᴇ Nᴀᴍᴇ: {filename}
-💾 Sɪᴢᴇ: {filesize}
-⏰ Dᴜʀᴀᴛɪᴏɴ: {duration}`
+Mo menu Chu thich de xem, dat hoac xoa. Co the dung {filename}, {filesize}, {duration}.
 """
     BOT_STATUS = """
 ⚡️ ʙᴏᴛ sᴛᴀᴛᴜs ⚡️
@@ -198,45 +194,17 @@ Exᴀᴍᴩʟᴇ:- `/set_caption 📕 Fɪʟᴇ Nᴀᴍᴇ: {filename}
 V𝟹.𝟶.𝟶 [STABLE]
 """
     DIGITAL_METADATA = """
-❪ SET CUSTOM METADATA ❫
+<b>Metadata</b>
 
-- /metadata - Tᴏ Sᴇᴛ & Cʜᴀɴɢᴇ ʏᴏᴜʀ ᴍᴇᴛᴀᴅᴀᴛᴀ ᴄᴏᴅᴇ
+Mo menu Metadata de bat/tat va dat ma tuy chinh.
 
-☞ Fᴏʀ Exᴀᴍᴘʟᴇ:-
-
+Vi du:
 `--change-title @DoraTeamMods
---change-video-title @DoraTeamMods
---change-audio-title @DoraTeamMods
---change-subtitle-title @DoraTeamMods
 --change-author @DoraTeamMods`
 
-📥 Fᴏʀ Hᴇʟᴘ Cᴏɴᴛ. @DoraTeamMods
+Ho tro: @DoraTeamMods
 """
     
-    CUSTOM_FILE_NAME = """
-<u>🖋️ Custom File Name</u>
-
-you can pre-add a prefix and suffix along with your new filename
-
-➢ /set_prefix - To add a prefix along with your _filename.
-➢ /see_prefix - Tᴏ Sᴇᴇ Yᴏᴜʀ Pʀᴇғɪx !!
-➢ /del_prefix - Tᴏ Dᴇʟᴇᴛᴇ Yᴏᴜʀ Pʀᴇғɪx !!
-➢ /set_suffix - To add a suffix along with your filename_.
-➢ /see_suffix - Tᴏ Sᴇᴇ Yᴏᴜʀ Sᴜғғɪx !!
-➢ /del_suffix - Tᴏ Dᴇʟᴇᴛᴇ Yᴏᴜʀ Sᴜғғɪx !!
-
-Exᴀᴍᴩʟᴇ:- `/set_suffix @DoraTeamMods`
-Exᴀᴍᴩʟᴇ:- `/set_prefix @DoraTeamMods`
-"""
-    
-    DEV_TXT = """<b><u>Sᴩᴇᴄɪᴀʟ Tʜᴀɴᴋꜱ & Dᴇᴠᴇʟᴏᴩᴇʀꜱ</b></u>
-    
-» 𝗦𝗢𝗨𝗥𝗖𝗘 𝗖𝗢𝗗𝗘 : <a href=https://github.com/ThanhDora>ThanhDora</a>
-
-• ❣️ <a href=https://github.com/ThanhDora>ThanhDora</a>
-• ❣️ DoraTeam | <a href=https://t.me/DoraTeamMods>@DoraTeamMods</a> """
-    # ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-
     SEND_METADATA = """
 ❪ SET CUSTOM METADATA ❫
 
