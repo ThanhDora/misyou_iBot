@@ -153,9 +153,6 @@ app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH
 
 @Client.on_message(filters.private & (filters.audio | filters.document | filters.video) & filters.create(require_approved))
 async def rename_start(client, message):
-    from helper.dump_state import DUMP_ACTIVE
-    if message.from_user.id in DUMP_ACTIVE:
-        return
     user_id  = message.from_user.id
     rkn_file = getattr(message, message.media.value)
     filename = rkn_file.file_name or ""
