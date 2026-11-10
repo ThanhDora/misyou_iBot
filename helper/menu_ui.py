@@ -30,22 +30,22 @@ def markup(rows):
 
 def back_row(*extra):
     row = list(extra)
-    row.append(btn("Quay lai", HOME))
+    row.append(btn("Quay lại", HOME))
     return row
 
 
 def cancel_markup():
-    return markup([[btn("Huy", CANCEL)]])
+    return markup([[btn("Huỷ", CANCEL)]])
 
 
 def nav_row(prefix, page, total_pages, back=HOME):
     row = []
     if page > 0:
-        row.append(btn("Truoc", f"{prefix}{page - 1}"))
+        row.append(btn("Trang trước", f"{prefix}{page - 1}"))
     if page + 1 < total_pages:
-        row.append(btn("Sau", f"{prefix}{page + 1}"))
+        row.append(btn("Trang sau", f"{prefix}{page + 1}"))
     rows = [row] if row else []
-    rows.append([btn("Quay lai", back)])
+    rows.append([btn("Quay lại", back)])
     return rows
 
 
@@ -63,119 +63,119 @@ def pop_pending(user_id):
 
 def home_text(mention):
     return (
-        f"Xin chao, {mention}\n\n"
-        "Day la bot doi ten file, anh bia va chu thich.\n\n"
-        "Cach dung:\n"
-        "- Gui file de doi ten (bot se hoi ten moi va dinh dang).\n"
-        "- Dung cac nut ben duoi de cai dat anh bia, chu thich, tien to, hau to, metadata va xem goi.\n\n"
-        "Lien he ho tro: @DoraTeamMods"
+        f"Xin chào, {mention}\n\n"
+        "Đây là bot đổi tên file, ảnh bìa và chú thích.\n\n"
+        "Cách dùng:\n"
+        "- Gửi file để đổi tên (bot sẽ hỏi tên mới và định dạng).\n"
+        "- Dùng các nút bên dưới để cài đặt ảnh bìa, chú thích, tiền tố, hậu tố, metadata và xem gói.\n\n"
+        "Liên hệ hỗ trợ: @DoraTeamMods"
     )
 
 
 def help_text():
     return (
-        "<b>Huong dan</b>\n\n"
-        "<b>Doi ten file</b>\n"
-        "Gui file (video, tai lieu hoac am thanh). Bot se hoi ten moi; tra loi tin nhan do, roi chon dinh dang neu can.\n\n"
-        "<b>Anh bia</b>\n"
-        "Vao Anh bia de xem, dat hoac xoa. Ban cung co the gui mot anh bat ky de dat anh bia.\n\n"
-        "<b>Chu thich</b>\n"
-        "Vao Chu thich de xem, dat hoac xoa. Co the dung {filename}, {filesize}, {duration}.\n\n"
-        "<b>Tien to / Hau to</b>\n"
-        "Them chu truoc hoac sau ten file khi doi ten.\n\n"
+        "<b>Hướng dẫn</b>\n\n"
+        "<b>Đổi tên file</b>\n"
+        "Gửi file (video, tài liệu hoặc âm thanh). Bot sẽ hỏi tên mới; trả lời tin nhắn đó, rồi chọn định dạng nếu cần.\n\n"
+        "<b>Ảnh bìa</b>\n"
+        "Vào Ảnh bìa để xem, đặt hoặc xoá. Bạn cũng có thể gửi một ảnh bất kỳ để đặt ảnh bìa.\n\n"
+        "<b>Chú thích</b>\n"
+        "Vào Chú thích để xem, đặt hoặc xoá. Có thể dùng {filename}, {filesize}, {duration}.\n\n"
+        "<b>Tiền tố / Hậu tố</b>\n"
+        "Thêm chữ trước hoặc sau tên file khi đổi tên.\n\n"
         "<b>Metadata</b>\n"
-        "Bat/tat va dat ma metadata tuy chinh.\n\n"
-        "<b>Goi cua toi</b>\n"
-        "Xem goi hien tai, dung luong da dung va han su dung (neu co).\n\n"
-        "Ho tro: @DoraTeamMods"
+        "Bật/tắt và đặt mã metadata tùy chỉnh.\n\n"
+        "<b>Gói của tôi</b>\n"
+        "Xem gói hiện tại, dung lượng đã dùng và hạn sử dụng (nếu có).\n\n"
+        "Hỗ trợ: @DoraTeamMods"
     )
 
 
 def about_text(client):
     name = getattr(client, "mention", None) or "MisYou"
     return (
-        f"<b>Thong tin bot</b>\n\n"
-        f"Ten: {name}\n"
-        f"Phat trien: ThanhDora | @DoraTeamMods\n"
-        f"Nguon: https://github.com/ThanhDora"
+        f"<b>Thông tin bot</b>\n\n"
+        f"Tên: {name}\n"
+        f"Phát triển: ThanhDora | @DoraTeamMods\n"
+        f"Nguồn: https://github.com/ThanhDora"
     )
 
 
 def home_markup(user_id, client):
     rows = [
-        [btn("Anh bia", "m:thumb"), btn("Chu thich", "m:cap")],
-        [btn("Tien to / Hau to", "m:name"), btn("Metadata", "m:meta")],
+        [btn("Ảnh bìa", "m:thumb"), btn("Chú thích", "m:cap")],
+        [btn("Tiền tố / Hậu tố", "m:name"), btn("Metadata", "m:meta")],
     ]
     if getattr(client, "premium", False):
-        rows.append([btn("Goi cua toi", "m:plan"), btn("Nang cap", "m:upgrade")])
-    rows.append([btn("Tro giup", HELP), btn("Thong tin", ABOUT)])
+        rows.append([btn("Gói của tôi", "m:plan"), btn("Nâng cấp", "m:upgrade")])
+    rows.append([btn("Trợ giúp", HELP), btn("Thông tin", ABOUT)])
     if is_admin(user_id):
-        rows.append([btn("Admin", "m:admin")])
+        rows.append([btn("Quản trị", "m:admin")])
     return markup(rows)
 
 
 def thumb_markup():
     return markup([
-        [btn("Xem", "m:thumb:view"), btn("Dat", "m:thumb:set"), btn("Xoa", "m:thumb:del")],
-        [btn("Quay lai", HOME)],
+        [btn("Xem", "m:thumb:view"), btn("Đặt", "m:thumb:set"), btn("Xoá", "m:thumb:del")],
+        [btn("Quay lại", HOME)],
     ])
 
 
 def caption_markup():
     return markup([
-        [btn("Xem", "m:cap:view"), btn("Dat", "m:cap:set"), btn("Xoa", "m:cap:del")],
-        [btn("Quay lai", HOME)],
+        [btn("Xem", "m:cap:view"), btn("Đặt", "m:cap:set"), btn("Xoá", "m:cap:del")],
+        [btn("Quay lại", HOME)],
     ])
 
 
 def name_markup():
     return markup([
-        [btn("Xem tien to", "m:pre:view"), btn("Dat tien to", "m:pre:set"), btn("Xoa tien to", "m:pre:del")],
-        [btn("Xem hau to", "m:suf:view"), btn("Dat hau to", "m:suf:set"), btn("Xoa hau to", "m:suf:del")],
-        [btn("Quay lai", HOME)],
+        [btn("Xem tiền tố", "m:pre:view"), btn("Đặt tiền tố", "m:pre:set"), btn("Xoá tiền tố", "m:pre:del")],
+        [btn("Xem hậu tố", "m:suf:view"), btn("Đặt hậu tố", "m:suf:set"), btn("Xoá hậu tố", "m:suf:del")],
+        [btn("Quay lại", HOME)],
     ])
 
 
 def metadata_markup(enabled):
-    toggle = "Tat metadata" if enabled else "Bat metadata"
+    toggle = "Tắt metadata" if enabled else "Bật metadata"
     return markup([
         [btn(toggle, "m:meta:tog")],
-        [btn("Dat ma metadata", "m:meta:set")],
-        [btn("Quay lai", HOME)],
+        [btn("Đặt mã metadata", "m:meta:set")],
+        [btn("Quay lại", HOME)],
     ])
 
 
 def admin_markup():
     rows = [
-        [btn("Danh sach nguoi dung", "m:ad:users:0")],
+        [btn("Danh sách người dùng", "m:ad:users:0")],
     ]
     if getattr(Config, "APPROVAL_REQUIRED", False):
-        rows.append([btn("Yeu cau duyet", "m:ad:pend:0")])
-    rows.append([btn("Thong ke", "m:ad:stats")])
-    rows.append([btn("Phat tin", "m:ad:bc"), btn("Nhat ky", "m:ad:logs")])
+        rows.append([btn("Yêu cầu duyệt", "m:ad:pend:0")])
+    rows.append([btn("Thống kê", "m:ad:stats")])
+    rows.append([btn("Phát tin", "m:ad:bc"), btn("Nhật ký", "m:ad:logs")])
     if Config.PREMIUM_MODE:
-        rows.append([btn("Them Premium", "m:ad:addpre"), btn("Go Premium", "m:ad:rmpre")])
-    rows.append([btn("Quay lai", HOME)])
+        rows.append([btn("Thêm Premium", "m:ad:addpre"), btn("Gỡ Premium", "m:ad:rmpre")])
+    rows.append([btn("Quay lại", HOME)])
     return markup(rows)
 
 
 def upgrade_markup(with_trial=False):
     rows = [[btn("Mua Premium", url=Config.PREMIUM_LINK)]]
     if with_trial:
-        rows.append([btn("Dung thu 12 gio", "m:trial")])
-    rows.append([btn("Quay lai", HOME)])
+        rows.append([btn("Dùng thử 12 giờ", "m:trial")])
+    rows.append([btn("Quay lại", HOME)])
     return markup(rows)
 
 
 def plan_choice_markup(user_id, back="m:admin"):
     return markup([
         [btn("VIP", f"m:pl:{user_id}:VIP"), btn("Pro", f"m:pl:{user_id}:Pro"), btn("UltraPro", f"m:pl:{user_id}:UltraPro")],
-        [btn("Huy", CANCEL)],
+        [btn("Huỷ", CANCEL)],
     ])
 
 
 def confirm_markup(yes_data, no_data=CANCEL):
-    return markup([[btn("Xac nhan", yes_data), btn("Huy", no_data)]])
+    return markup([[btn("Xác nhận", yes_data), btn("Huỷ", no_data)]])
 
 
 def label_user(tg_user, uid):

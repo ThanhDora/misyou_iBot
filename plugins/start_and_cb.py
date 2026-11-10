@@ -151,7 +151,7 @@ async def cb_handler(client, query: CallbackQuery):
         await query.message.edit_text(
             text=menu_help_text(),
             disable_web_page_preview=True,
-            reply_markup=menu_markup([[menu_btn("Quay lai", "m:home")]]))
+            reply_markup=menu_markup([[menu_btn("Quay lại", "m:home")]]))
 
     elif data == "about":
         about_button = [[

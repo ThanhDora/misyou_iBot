@@ -79,7 +79,7 @@ class DigitalRenameBot(Client):
                 print("Digital Botz Imported " + plugin_name)
                 
         try:
-            await self.set_bot_commands([BotCommand("start", "Mo menu")])
+            await self.set_bot_commands([BotCommand("start", "Mở menu")])
         except Exception:
             pass
 

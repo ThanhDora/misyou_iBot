@@ -103,15 +103,15 @@ class Config(object):
 
 class rkn(object):
     # part of text configuration
-    START_TXT = """<b>Xin chao, {}
+    START_TXT = """<b>Xin chào, {}
 
-Day la bot doi ten file, anh bia va chu thich.
+Đây là bot đổi tên file, ảnh bìa và chú thích.
 
-Cach dung:
-- Gui file de doi ten
-- Dung cac nut ben duoi de cai dat
+Cách dùng:
+- Gửi file để đổi tên
+- Dùng các nút bên dưới để cài đặt
 
-Ho tro: @DoraTeamMods</b>"""
+Hỗ trợ: @DoraTeamMods</b>"""
 
     ABOUT_TXT = """<b>╭───────────⍟
 ├🤖 ᴍy ɴᴀᴍᴇ : {}
@@ -124,15 +124,15 @@ Ho tro: @DoraTeamMods</b>"""
 ╰───────────────⍟ """
 
     HELP_TXT = """
-<b>Huong dan</b>
+<b>Hướng dẫn</b>
 
-<b>Doi ten file</b>
-Gui file, roi nhap ten moi theo huong dan cua bot.
+<b>Đổi tên file</b>
+Gửi file, rồi nhập tên mới theo hướng dẫn của bot.
 
-<b>Cai dat</b>
-Dung cac nut trong menu: Anh bia, Chu thich, Tien to / Hau to, Metadata, Goi cua toi.
+<b>Cài đặt</b>
+Dùng các nút trong menu: Ảnh bìa, Chú thích, Tiền tố / Hậu tố, Metadata, Gói của tôi.
 
-Ho tro: <a href=https://t.me/DoraTeamMods>@DoraTeamMods</a>
+Hỗ trợ: <a href=https://t.me/DoraTeamMods>@DoraTeamMods</a>
 """
 
     UPGRADE_PREMIUM= """
@@ -162,14 +162,14 @@ Ho tro: <a href=https://t.me/DoraTeamMods>@DoraTeamMods</a>
     """
     
     THUMBNAIL = """
-<b>Anh bia</b>
+<b>Ảnh bìa</b>
 
-Mo menu Anh bia de xem, dat hoac xoa. Ban cung co the gui mot anh bat ky de dat anh bia.
+Mở menu Ảnh bìa để xem, đặt hoặc xoá. Bạn cũng có thể gửi một ảnh bất kỳ để đặt ảnh bìa.
 """
     CAPTION= """
-<b>Chu thich</b>
+<b>Chú thích</b>
 
-Mo menu Chu thich de xem, dat hoac xoa. Co the dung {filename}, {filesize}, {duration}.
+Mở menu Chú thích để xem, đặt hoặc xoá. Có thể dùng {filename}, {filesize}, {duration}.
 """
     BOT_STATUS = """
 ⚡️ ʙᴏᴛ sᴛᴀᴛᴜs ⚡️
@@ -193,16 +193,22 @@ Mo menu Chu thich de xem, dat hoac xoa. Co the dung {filename}, {filesize}, {dur
 ᴅᴏᴡɴʟᴏᴀᴅ: `{}`
 V𝟹.𝟶.𝟶 [STABLE]
 """
+    CUSTOM_FILE_NAME = """
+<b>Tiền tố / Hậu tố</b>
+
+Mở menu Tiền tố / Hậu tố để xem, đặt hoặc xoá chữ đứng trước và sau tên file khi đổi tên.
+"""
+
     DIGITAL_METADATA = """
 <b>Metadata</b>
 
-Mo menu Metadata de bat/tat va dat ma tuy chinh.
+Mở menu Metadata để bật/tắt và đặt mã tùy chỉnh.
 
-Vi du:
+Ví dụ:
 `--change-title @DoraTeamMods
 --change-author @DoraTeamMods`
 
-Ho tro: @DoraTeamMods
+Hỗ trợ: @DoraTeamMods
 """
     
     SEND_METADATA = """
