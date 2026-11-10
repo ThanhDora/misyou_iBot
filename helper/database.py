@@ -5,6 +5,7 @@ Apache License 2.0
 
 # database imports
 import motor.motor_asyncio, datetime, pytz
+from pymongo.errors import DuplicateKeyError
 
 # bots imports
 from config import Config
@@ -55,6 +56,22 @@ class Database:
         user = await self.col.find_one({'_id': int(id)})
         return bool(user)
 
+    async def ensure_user(self, user_id):
+        """Create a default user document if this id has never /start'ed."""
+        uid = int(user_id)
+        user = await self.col.find_one({'_id': uid})
+        if user:
+            return user
+        doc = self.new_user(uid)
+        try:
+            await self.col.insert_one(doc)
+            return doc
+        except DuplicateKeyError:
+            user = await self.col.find_one({'_id': uid})
+            if user:
+                return user
+            raise
+
     async def is_approved(self, user_id):
         if not getattr(Config, "APPROVAL_REQUIRED", False):
             return True
@@ -64,6 +81,7 @@ class Database:
         return user.get("approved", True)
 
     async def set_approved(self, user_id, approved):
+        await self.ensure_user(user_id)
         await self.col.update_one({'_id': int(user_id)}, {'$set': {'approved': bool(approved)}})
 
     async def get_pending_users(self):
@@ -83,57 +101,67 @@ class Database:
         await self.premium.delete_many({'id': uid})
     
     async def set_thumbnail(self, id, file_id):
+        await self.ensure_user(id)
         await self.col.update_one({'_id': int(id)}, {'$set': {'file_id': file_id}})
 
     async def get_thumbnail(self, id):
-        user = await self.col.find_one({'_id': int(id)})
+        user = await self.get_user_data(id)
         return user.get('file_id', None)
 
     async def set_caption(self, id, caption):
+        await self.ensure_user(id)
         await self.col.update_one({'_id': int(id)}, {'$set': {'caption': caption}})
 
     async def get_caption(self, id):
-        user = await self.col.find_one({'_id': int(id)})
+        user = await self.get_user_data(id)
         return user.get('caption', None)
 
     async def set_prefix(self, id, prefix):
+        await self.ensure_user(id)
         await self.col.update_one({'_id': int(id)}, {'$set': {'prefix': prefix}})
 
     async def get_prefix(self, id):
-        user = await self.col.find_one({'_id': int(id)})
+        user = await self.get_user_data(id)
         return user.get('prefix', None)
 
     async def set_suffix(self, id, suffix):
+        await self.ensure_user(id)
         await self.col.update_one({'_id': int(id)}, {'$set': {'suffix': suffix}})
 
     async def get_suffix(self, id):
-        user = await self.col.find_one({'_id': int(id)})
+        user = await self.get_user_data(id)
         return user.get('suffix', None)
 
     async def set_metadata_mode(self, id, bool_meta):
+        await self.ensure_user(id)
         await self.col.update_one({'_id': int(id)}, {'$set': {'metadata_mode': bool_meta}})
 
     async def get_metadata_mode(self, id):
-        user = await self.col.find_one({'_id': int(id)})
+        user = await self.get_user_data(id)
         return user.get('metadata_mode', None)
 
     async def set_metadata_code(self, id, metadata_code):
+        await self.ensure_user(id)
         await self.col.update_one({'_id': int(id)}, {'$set': {'metadata_code': metadata_code}})
 
     async def get_metadata_code(self, id):
-        user = await self.col.find_one({'_id': int(id)})
+        user = await self.get_user_data(id)
         return user.get('metadata_code', None)
 
     async def set_used_limit(self, id, used):
+        await self.ensure_user(id)
         await self.col.update_one({'_id': int(id)}, {'$set': {'used_limit': used}})
       
     async def set_usertype(self, id, type):
+        await self.ensure_user(id)
         await self.col.update_one({'_id': int(id)}, {'$set': {'usertype': type}})
 
     async def set_uploadlimit(self, id, limit):
+        await self.ensure_user(id)
         await self.col.update_one({'_id': int(id)}, {'$set': {'uploadlimit': limit}})
   
     async def set_reset_dailylimit(self, id, date):
+        await self.ensure_user(id)
         await self.col.update_one({'_id': int(id)}, {'$set': {'daily': date}})
         
     async def reset_uploadlimit_access(self, user_id):
@@ -163,14 +191,14 @@ class Database:
                 )
                         
     async def get_user_data(self, id) -> dict:
-        user_data = await self.col.find_one({'_id': int(id)})
-        return user_data or None
+        return await self.ensure_user(id)
         
     async def get_user(self, user_id):
         user_data = await self.premium.find_one({"id": user_id})
         return user_data
 
-    async def add_premium(self, user_id, user_data, limit=None, type=None):    
+    async def add_premium(self, user_id, user_data, limit=None, type=None):
+        await self.ensure_user(user_id)
         await self.premium.update_one(
             {"id": user_id}, 
             {"$set": user_data}, 
@@ -189,6 +217,7 @@ class Database:
     addpremium = add_premium
 
     async def remove_premium(self, user_id, limit=Config.FREE_UPLOAD_LIMIT, type="Free"):
+        await self.ensure_user(user_id)
         await self.premium.update_one(
             {"id": user_id}, 
             {"$set": {
@@ -207,10 +236,11 @@ class Database:
             )
           
     async def checking_remaining_time(self, user_id):
-        user_data = await self.get_user(user_id)
+        user_data = await self.get_user(user_id) or {}
         expiry_time = user_data.get("expiry_time")
-        time_left_str = expiry_time - datetime.datetime.now()
-        return time_left_str
+        if not expiry_time:
+            return None
+        return expiry_time - datetime.datetime.now()
 
     async def has_premium_access(self, user_id):
         user_data = await self.get_user(user_id)
@@ -262,6 +292,7 @@ class Database:
             banned_on=datetime.date.max.isoformat(),
             ban_reason=''
         )
+        await self.ensure_user(id)
         await self.col.update_one({'_id': int(id)}, {'$set': {'ban_status': ban_status}})
 
     async def ban_user(self, user_id, ban_duration, ban_reason):
@@ -270,6 +301,7 @@ class Database:
             ban_duration=ban_duration,
             banned_on=datetime.date.today().isoformat(),
             ban_reason=ban_reason)
+        await self.ensure_user(user_id)
         await self.col.update_one(
             {'_id': int(user_id)},
             {'$set': {'ban_status': ban_status}},

@@ -59,8 +59,10 @@ async def myplan(client, message):
     user = message.from_user.mention
     
     if await digital_botz.has_premium_access(user_id):
-        data = await digital_botz.get_user(user_id)
+        data = await digital_botz.get_user(user_id) or {}
         expiry_str_in_ist = data.get("expiry_time")
+        if expiry_str_in_ist is None:
+            return await message.reply_text("Không đọc được hạn premium. Thử /myplan lại sau.", quote=True)
         time_left_str = expiry_str_in_ist - datetime.datetime.now()
 
         text = f"ᴜꜱᴇʀ :- {user}\nᴜꜱᴇʀ ɪᴅ :- <code>{user_id}</code>\n"
