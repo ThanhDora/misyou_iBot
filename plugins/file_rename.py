@@ -151,6 +151,70 @@ async def _animate_itunes_loading(message, stop_event):
 app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION)
 
 
+# Telegram MTProto limit for bot-token sessions. pyrofork allows 4000 MiB only when
+# client.me.is_premium is true (a Premium USER session, not a bot token).
+BOT_MAX_FILE_BYTES = 2000 * 1024 * 1024
+PREMIUM_USER_MAX_FILE_BYTES = 4000 * 1024 * 1024
+
+
+def _userbot_ready():
+    """Existing 4GB upload path needs a Premium user string session and a dump channel."""
+    return bool(Config.STRING_SESSION) and bool(Config.LOG_CHANNEL)
+
+
+def _file_too_large_for_bot(file_size):
+    try:
+        return int(file_size or 0) > BOT_MAX_FILE_BYTES
+    except (TypeError, ValueError):
+        return False
+
+
+def _upload_oversize_text():
+    if _userbot_ready():
+        return (
+            "Không tải lên được file lớn hơn 2 GB từ phiên bot.\n\n"
+            "Bot Telegram chỉ gửi được tối đa 2000 MiB (2 GB). "
+            "Giới hạn 4 GB chỉ áp dụng khi gửi từ tài khoản người dùng Premium. "
+            "Hãy kiểm tra tài khoản userbot đã là Premium và bot cùng userbot đều có quyền trong kênh lưu trữ."
+        )
+    return (
+        "Không tải lên được file lớn hơn 2 GB.\n\n"
+        "Bot Telegram (bot token) chỉ gửi được tối đa 2000 MiB (2 GB). "
+        "Giới hạn 4 GB của Telegram chỉ áp dụng khi gửi từ tài khoản người dùng Premium, không phải từ bot. "
+        "Bot này hiện chưa được cấu hình tài khoản Premium (userbot) để hỗ trợ file trên 2 GB."
+    )
+
+
+def _download_oversize_text():
+    return (
+        "Không tải xuống được file lớn hơn 2 GB.\n\n"
+        "Bot Telegram chỉ tải xuống được tối đa 2000 MiB (2 GB). "
+        "File lớn hơn 2 GB (gửi từ tài khoản Premium) thường không tải được bằng bot."
+    )
+
+
+def _is_size_limit_error(err):
+    text = str(err or "").lower()
+    return "bigger than" in text and "mib" in text
+
+
+def _friendly_upload_error(err):
+    if _is_size_limit_error(err):
+        return _upload_oversize_text()
+    return f"Tải lên thất bại. Vui lòng thử lại.\nLỗi: {err}"
+
+
+def _friendly_download_error(err):
+    if _is_size_limit_error(err):
+        return _download_oversize_text()
+    text = str(err or "").lower()
+    if "too big" in text or "file is too big" in text or "file too large" in text:
+        return _download_oversize_text()
+    return f"Tải xuống thất bại. Vui lòng thử lại.\nLỗi: {err}"
+
+
+
+
 @Client.on_message(filters.private & (filters.audio | filters.document | filters.video) & filters.create(require_approved))
 async def rename_start(client, message):
     user_id  = message.from_user.id
@@ -172,15 +236,14 @@ async def rename_start(client, message):
         if remain < int(rkn_file.file_size):
             return await message.reply_text(f"{used_percentage:.2f}% Of Daily Upload Limit {humanbytes(limit)}.\n\n Media Size: {filesize}\n Your Used Daily Limit {humanbytes(used)}\n\nYou have only **{humanbytes(remain)}** Data.\nPlease, Buy Premium Plan s.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🪪 Uᴘɢʀᴀᴅᴇ", callback_data="plans")]]))
 
+    if _file_too_large_for_bot(rkn_file.file_size) and not _userbot_ready():
+        return await message.reply_text(f"{Config.E_ERROR} {_upload_oversize_text()}", parse_mode=ParseMode.HTML, reply_to_message_id=message.id)
+
     if is_ipa_deb:
         await process_upload(client, message.chat.id, message, "document", filename.strip() or ("app.ipa" if filename.lower().endswith(".ipa") else "app.deb"))
         return
 
     if await digital_botz.has_premium_access(user_id) and client.premium:
-        if not Config.STRING_SESSION:
-            if rkn_file.file_size > 2000 * 1024 * 1024:
-                 return await message.reply_text("Sᴏʀʀy Bʀᴏ Tʜɪꜱ Bᴏᴛ Iꜱ Dᴏᴇꜱɴ'ᴛ Sᴜᴩᴩᴏʀᴛ Uᴩʟᴏᴀᴅɪɴɢ Fɪʟᴇꜱ Bɪɢɢᴇʀ Tʜᴀɴ 2Gʙ+")
-
         try:
             await message.reply_text(
                 text=f"**__ᴍᴇᴅɪᴀ ɪɴꜰᴏ:\n\n◈ ᴏʟᴅ ꜰɪʟᴇ ɴᴀᴍᴇ: `{filename}`\n\n◈ ᴇxᴛᴇɴꜱɪᴏɴ: `{extension_type.upper()}`\n◈ ꜰɪʟᴇ ꜱɪᴢᴇ: `{filesize}`\n◈ ᴍɪᴍᴇ ᴛʏᴇᴩ: `{mime_type}`\n◈ ᴅᴄ ɪᴅ: `{dcid}`\n\nᴘʟᴇᴀsᴇ ᴇɴᴛᴇʀ ᴛʜᴇ ɴᴇᴡ ғɪʟᴇɴᴀᴍᴇ ᴡɪᴛʜ ᴇxᴛᴇɴsɪᴏɴ ᴀɴᴅ ʀᴇᴘʟʏ ᴛʜɪs ᴍᴇssᴀɢᴇ....__**",
@@ -198,9 +261,6 @@ async def rename_start(client, message):
         except Exception as e:
             print(f"Error in rename_start: {e}")
     else:
-        if rkn_file.file_size > 2000 * 1024 * 1024 and client.premium:
-            return await message.reply_text("If you want to rename 4GB+ files then you will have to buy premium. /plans")
-
         try:
             await message.reply_text(
                 text=f"**__ᴍᴇᴅɪᴀ ɪɴꜰᴏ:\n\n◈ ᴏʟᴅ ꜰɪʟᴇ ɴᴀᴍᴇ: `{filename}`\n\n◈ ᴇxᴛᴇɴꜱɪᴏɴ: `{extension_type.upper()}`\n◈ ꜰɪʟᴇ ꜱɪᴢᴇ: `{filesize}`\n◈ ᴍɪᴍᴇ ᴛʏᴇᴩ: `{mime_type}`\n◈ ᴅᴄ ɪᴅ: `{dcid}`\n\nᴘʟᴇᴀsᴇ ᴇɴᴛᴇʀ ᴛʜᴇ ɴᴇᴡ ғɪʟᴇɴᴀᴍᴇ ᴡɪᴛʜ ᴇxᴛᴇɴsɪᴏɴ ᴀɴᴅ ʀᴇᴘʟʏ ᴛʜɪs ᴍᴇssᴀɢᴇ....__**",
@@ -357,6 +417,9 @@ async def process_upload(bot, chat_id, file_message, upload_type, new_filename):
         _botlog.error("Prefix/Suffix Error: %s", e, exc_info=True)
         return await rkn_processing.edit(f"{Config.E_ERROR} Không đặt được tiền tố hoặc hậu tố.\n\nLiên hệ @DoraTeamMods\nLỗi: {e}", parse_mode=ParseMode.HTML)
     media = getattr(file_message, file_message.media.value)
+    if _file_too_large_for_bot(getattr(media, "file_size", 0)) and not _userbot_ready():
+        await _stop_loading_ui(sticker_rot_task, stop_sticker_rot, loading_media_ref)
+        return await rkn_processing.edit(f"{Config.E_ERROR} {_upload_oversize_text()}", parse_mode=ParseMode.HTML)
     file_path = f"Renames/{new_filename}"
     metadata_path = f"Metadata/{new_filename}"
     used = user_data.get('used_limit', 0)
@@ -382,7 +445,7 @@ async def process_upload(bot, chat_id, file_message, upload_type, new_filename):
             except Exception:
                 pass
         _botlog.error("Download Error: %s", e, exc_info=True)
-        return await rkn_processing.edit(f"{Config.E_ERROR} Tải xuống thất bại. Vui lòng thử lại.\nLỗi: {e}", parse_mode=ParseMode.HTML)
+        return await rkn_processing.edit(f"{Config.E_ERROR} {_friendly_download_error(e)}", parse_mode=ParseMode.HTML)
     ph_path = None
     modified_ipa_path = None
     itunes_upload_path = None
@@ -522,7 +585,7 @@ async def process_upload(bot, chat_id, file_message, upload_type, new_filename):
                     except Exception:
                         pass
                 _botlog.error("Upload Error: %s", error)
-                return await rkn_processing.edit(f"{Config.E_ERROR} Tải lên thất bại. Vui lòng thử lại.\nLỗi: {error}", parse_mode=ParseMode.HTML)
+                return await rkn_processing.edit(f"{Config.E_ERROR} {_friendly_upload_error(error)}", parse_mode=ParseMode.HTML)
             if Config.LOG_CHANNEL:
                 from_chat = filw.chat.id
                 mg_id = filw.id
@@ -548,7 +611,7 @@ async def process_upload(bot, chat_id, file_message, upload_type, new_filename):
                     except Exception:
                         pass
                 _botlog.error("Upload Error: %s", error)
-                return await rkn_processing.edit(f"{Config.E_ERROR} Tải lên thất bại. Vui lòng thử lại.\nLỗi: {error}", parse_mode=ParseMode.HTML)
+                return await rkn_processing.edit(f"{Config.E_ERROR} {_friendly_upload_error(error)}", parse_mode=ParseMode.HTML)
         await remove_path(ph_path, file_path, dl_path, metadata_path, modified_ipa_path, itunes_upload_path)
         if sticker_rot_task:
             stop_sticker_rot.set()
@@ -612,6 +675,11 @@ async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption,
     try:
         if not os.path.exists(file_path):
             return None, f"File not found: {file_path}"
+        local_size = os.path.getsize(file_path)
+        me = getattr(bot, "me", None)
+        size_limit = PREMIUM_USER_MAX_FILE_BYTES if (me is not None and getattr(me, "is_premium", False)) else BOT_MAX_FILE_BYTES
+        if local_size > size_limit:
+            return None, _upload_oversize_text()
         thumb_arg = _make_document_thumb(ph_path)
         cap_kw = {"parse_mode": ParseMode.HTML} if "<b>" in (caption or "") else {}
         if upload_type == "document":
@@ -654,7 +722,7 @@ async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption,
                 pass
         return filw, None
     except Exception as e:
-        return None, str(e)
+        return None, _friendly_upload_error(e)
 
 
 #@Client.on_callback_query(filters.regex("upload"))
@@ -683,6 +751,8 @@ async def upload_doc(bot, update):
     # msg file location 
     file = update.message.reply_to_message
     media = getattr(file, file.media.value)
+    if _file_too_large_for_bot(getattr(media, "file_size", 0)) and not _userbot_ready():
+        return await rkn_processing.edit(f"{Config.E_ERROR} {_upload_oversize_text()}", parse_mode=ParseMode.HTML)
     
     # File paths for download and metadata
     file_path = f"Renames/{new_filename}"
@@ -700,7 +770,7 @@ async def upload_doc(bot, update):
             used_remove = int(used) - int(media.file_size)
             await digital_botz.set_used_limit(user_id, used_remove)
         _botlog.error("Download Error: %s", e, exc_info=True)
-        return await rkn_processing.edit(f"{Config.E_ERROR} Tải xuống thất bại. Vui lòng thử lại.\nLỗi: {e}", parse_mode=ParseMode.HTML)
+        return await rkn_processing.edit(f"{Config.E_ERROR} {_friendly_download_error(e)}", parse_mode=ParseMode.HTML)
 
     ph_path = None
     modified_ipa_path = None
@@ -846,7 +916,7 @@ async def upload_doc(bot, update):
                     await digital_botz.set_used_limit(user_id, used_remove)
                 await remove_path(ph_path, file_path, dl_path, metadata_path, modified_ipa_path, itunes_upload_path)
                 _botlog.error("Upload Error: %s", error)
-                return await rkn_processing.edit(f"{Config.E_ERROR} Tải lên thất bại. Vui lòng thử lại.\nLỗi: {error}", parse_mode=ParseMode.HTML)
+                return await rkn_processing.edit(f"{Config.E_ERROR} {_friendly_upload_error(error)}", parse_mode=ParseMode.HTML)
             if Config.LOG_CHANNEL:
                 from_chat = filw.chat.id
                 mg_id = filw.id
@@ -868,7 +938,7 @@ async def upload_doc(bot, update):
                     await digital_botz.set_used_limit(user_id, used_remove)
                 await remove_path(ph_path, file_path, dl_path, metadata_path, modified_ipa_path, itunes_upload_path)
                 _botlog.error("Upload Error: %s", error)
-                return await rkn_processing.edit(f"{Config.E_ERROR} Tải lên thất bại. Vui lòng thử lại.\nLỗi: {error}", parse_mode=ParseMode.HTML)
+                return await rkn_processing.edit(f"{Config.E_ERROR} {_friendly_upload_error(error)}", parse_mode=ParseMode.HTML)
 
         await remove_path(ph_path, file_path, dl_path, metadata_path, modified_ipa_path, itunes_upload_path)
         try:
